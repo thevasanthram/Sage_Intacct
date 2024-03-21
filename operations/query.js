@@ -1,3 +1,5 @@
+const fs = require("fs");
+
 query();
 
 async function query() {
@@ -8,14 +10,16 @@ async function query() {
     const client = bootstrap.client();
 
     let query = new IA.Functions.Common.ReadByQuery();
+    console.log("query: ", query);
     query.objectName = "ARINVOICE";
     query.returnFormat = "json";
-    query.pageSize = 1000;
-    query.result = "7030372d776562303333ZfvX9bYobeFo6jEeJwktBwAAAAU4";
-    // query.controlId = "9cdd2db3-9965-47a3-b3d9-d49974672ad5";
+    // query.pageSize = 1000;
+    // query.page = 2;
+    // query.result = "7030372d776562303331Zfvdh7j8mvNonxj4Sqag_gAAAAw4";
+    // query.controlId = "1711005998476";
 
     const response = await client.execute(query);
-    console.log(response);
+    // console.log(response);
     const result = response.getResult();
 
     let json_data = result.data;
@@ -23,8 +27,19 @@ async function query() {
     // console.log(Object.values(json_data));
     // console.log(Object.keys(json_data).length);
     // console.log("Result:", Object.keys(Object.values(json_data)[0]));
-    // console.log("Result:", Object.keys(Object.values(json_data)[0]).length);
+    // console.log("Result:", Object.values(json_data)[0]["RECORDNO"]);
     // console.log(JSON.stringify(json_data));
+
+    const arr = [];
+    Object.values(json_data).map((invoice) => {
+      arr.push(invoice["RECORDNO"]);
+    });
+
+    fs.writeFile("./response.js", JSON.stringify(arr), () => {
+      console.log("data written to file");
+    });
+
+    // console.log(arr);
   } catch (ex) {
     console.log("Error from main: ", ex);
   }
