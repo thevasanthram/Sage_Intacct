@@ -1,10 +1,13 @@
 const fs = require("fs");
+const csv_generator = require("./../modules/csv_generator");
 
 query();
 
 async function query() {
   const bootstrap = require("./../bootstrap");
   const IA = require("@intacct/intacct-sdk");
+
+  const data_lake = {};
 
   try {
     const client = bootstrap.client();
@@ -17,19 +20,17 @@ async function query() {
     // query.resultId = "7030372d776562303330ZfwHvoQwaDHcMgMEJphxAwAAAAY4";
     // query.controlId = "1711005998476";
 
+    data_lake[query.objectName] = {};
+
     let response = await client.execute(query);
     // console.log(response);
     const result = response.getResult();
 
     let json_data = result.data;
 
-    const arr = [];
+    let data_pool = {};
     Object.values(json_data).map((invoice) => {
-      arr.push(invoice["RECORDNO"]);
-    });
-
-    fs.writeFile("./response.js", JSON.stringify(arr), () => {
-      console.log("data written to file");
+      data_pool[invoice["RECORDNO"]] = invoice;
     });
 
     let shouldIterate = true;
@@ -53,15 +54,26 @@ async function query() {
 
       let json_data = result.data;
 
-      const arr = [];
+      let temp_data_pool = {};
       Object.values(json_data).map((invoice) => {
-        arr.push(invoice["RECORDNO"]);
+        temp_data_pool[invoice["RECORDNO"]] = invoice;
       });
 
-      fs.writeFile("./response.js", JSON.stringify(arr), () => {
-        console.log("data written to file");
-      });
+      data_pool = { ...data_pool, ...temp_data_pool };
     } while (shouldIterate);
+
+    data_lake[query.objectName] = data_pool;
+
+    console.log(
+      "total records: ",
+      Object.keys(data_lake[query.objectName]).length
+    );
+
+    let firstObject =
+      data_lake[query.objectName][Object.keys(data_lake[query.objectName])[0]];
+
+    // generating csv files for this data
+    csv_generator(data_lake[query.objectName], firstObject, query.objectName);
 
     // console.log(arr);
   } catch (ex) {
