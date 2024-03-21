@@ -1,17 +1,21 @@
 const fs = require("fs");
 const path = require("path");
-const flattenObject = require("./new_flatten_object");
-const extractMatchingValues = require("./extract_matching_values");
 
 // Function to process and write data in batches
-async function csv_generator(data_pool, flattenedSampleObj, csv_file_name) {
+async function csv_generator(
+  api_name,
+  api_category,
+  data_pool,
+  flattenedSampleObj,
+  csv_file_name
+) {
   // Process and write data in batches
   const batchSize = 100; // Set the batch size as needed
   let index = 0;
 
-  const csv_folder_path = "./flat_tables";
+  const csv_folder_path = `./flat_tables/${api_category}/`;
 
-  csv_file_name = csv_file_name.replace(/-/g, "_").replace("/", "_");
+  csv_file_name = api_name.replace(/-/g, "_").replace("/", "_");
 
   // console.log("csv_generator function");
 
@@ -41,14 +45,14 @@ async function csv_generator(data_pool, flattenedSampleObj, csv_file_name) {
 
     if (batch.length > 0) {
       for (const currentObj of batch) {
-        const flattenedObj = flattenObject(currentObj);
-        const filteredObj = extractMatchingValues(
-          flattenedSampleObj,
-          flattenedObj
-        );
+        // const flattenedObj = flattenObject(currentObj);
+        // const filteredObj = extractMatchingValues(
+        //   flattenedSampleObj,
+        //   flattenedObj
+        // );
 
         // Convert the array of values to CSV format
-        const csvData = Object.values(filteredObj)
+        const csvData = Object.values(currentObj)
           .map((value) => {
             if (value && value != "") {
               return String(value)
