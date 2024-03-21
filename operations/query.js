@@ -1,12 +1,11 @@
 const fs = require("fs");
 const csv_generator = require("./../modules/csv_generator");
+const bootstrap = require("./../bootstrap");
+const IA = require("@intacct/intacct-sdk");
 
 query();
 
 async function query() {
-  const bootstrap = require("./../bootstrap");
-  const IA = require("@intacct/intacct-sdk");
-
   const data_lake = {};
 
   try {
