@@ -10,25 +10,18 @@ async function query() {
     const client = bootstrap.client();
 
     let query = new IA.Functions.Common.ReadByQuery();
-    console.log("query: ", query);
+    // let query = new IA.Functions.Common.ReadMore();
     query.objectName = "ARINVOICE";
     query.returnFormat = "json";
-    // query.pageSize = 1000;
-    // query.page = 2;
-    // query.result = "7030372d776562303331Zfvdh7j8mvNonxj4Sqag_gAAAAw4";
+    query.pageSize = 1000;
+    // query.resultId = "7030372d776562303330ZfwHvoQwaDHcMgMEJphxAwAAAAY4";
     // query.controlId = "1711005998476";
 
-    const response = await client.execute(query);
+    let response = await client.execute(query);
     // console.log(response);
     const result = response.getResult();
 
     let json_data = result.data;
-
-    // console.log(Object.values(json_data));
-    // console.log(Object.keys(json_data).length);
-    // console.log("Result:", Object.keys(Object.values(json_data)[0]));
-    // console.log("Result:", Object.values(json_data)[0]["RECORDNO"]);
-    // console.log(JSON.stringify(json_data));
 
     const arr = [];
     Object.values(json_data).map((invoice) => {
@@ -38,6 +31,37 @@ async function query() {
     fs.writeFile("./response.js", JSON.stringify(arr), () => {
       console.log("data written to file");
     });
+
+    let shouldIterate = true;
+
+    do {
+      let query = new IA.Functions.Common.ReadMore();
+      query.resultId = response._results[0]._resultId;
+
+      response = await client.execute(query);
+      console.log(response);
+      const result = response.getResult();
+
+      const _totalCount = response._results[0]._totalCount;
+      const _numRemaining = response._results[0]._numRemaining;
+
+      console.log("_numRemaining: ", _numRemaining);
+
+      if (_numRemaining == 0) {
+        shouldIterate = false;
+      }
+
+      let json_data = result.data;
+
+      const arr = [];
+      Object.values(json_data).map((invoice) => {
+        arr.push(invoice["RECORDNO"]);
+      });
+
+      fs.writeFile("./response.js", JSON.stringify(arr), () => {
+        console.log("data written to file");
+      });
+    } while (shouldIterate);
 
     // console.log(arr);
   } catch (ex) {
