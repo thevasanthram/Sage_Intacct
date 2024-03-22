@@ -31,8 +31,6 @@ const api_collection = {
 };
 
 async function query(api_keyword, api_name, api_category) {
-  const data_lake = {};
-
   try {
     const client = bootstrap.client();
 
@@ -44,69 +42,73 @@ async function query(api_keyword, api_name, api_category) {
     // query.resultId = "7030372d776562303330ZfwHvoQwaDHcMgMEJphxAwAAAAY4";
     // query.controlId = "1711005998476";
 
-    data_lake[query.objectName] = {};
-
     let response = await client.execute(query);
     // console.log(response);
     const result = response.getResult();
 
     let json_data = result.data;
 
-    let data_pool = {};
-    Object.values(json_data).map((invoice) => {
-      data_pool[invoice["RECORDNO"]] = invoice;
-    });
-
-    let shouldIterate = true;
-
-    do {
-      let query = new IA.Functions.Common.ReadMore();
-      query.resultId = response._results[0]._resultId;
-
-      response = await client.execute(query);
-      const result = response.getResult();
-
-      const _totalCount = response._results[0]._totalCount;
-      const _numRemaining = response._results[0]._numRemaining;
-
-      console.log("_numRemaining: ", _numRemaining);
-
-      if (_numRemaining == 0) {
-        shouldIterate = false;
-      }
-
-      let json_data = result.data;
-
-      let temp_data_pool = {};
+    if (json_data.length > 0) {
+      let data_pool = {};
       Object.values(json_data).map((invoice) => {
-        temp_data_pool[invoice["RECORDNO"]] = invoice;
+        data_pool[invoice["RECORDNO"]] = invoice;
       });
 
-      data_pool = { ...data_pool, ...temp_data_pool };
-    } while (shouldIterate);
+      let firstObject = data_pool[Object.keys(data_pool)[0]];
 
-    data_lake[query.objectName] = data_pool;
+      // generating csv files for this data
+      csv_generator(
+        api_name,
+        api_category,
+        data_pool,
+        firstObject,
+        query.objectName,
+        true
+      );
 
-    console.log(
-      "total records: ",
-      Object.keys(data_lake[query.objectName]).length
-    );
+      let shouldIterate = true;
 
-    let firstObject =
-      data_lake[query.objectName][Object.keys(data_lake[query.objectName])[0]];
+      do {
+        let query = new IA.Functions.Common.ReadMore();
+        query.resultId = response._results[0]._resultId;
 
-    // generating csv files for this data
-    csv_generator(
-      api_name,
-      api_category,
-      data_lake[query.objectName],
-      firstObject,
-      query.objectName
-    );
+        response = await client.execute(query);
+        const result = response.getResult();
 
-    // console.log(arr);
+        const _totalCount = response._results[0]._totalCount;
+        const _numRemaining = response._results[0]._numRemaining;
+
+        console.log(
+          `${api_name} -> ${api_keyword} -> remaining records: `,
+          _numRemaining
+        );
+
+        if (_numRemaining == 0) {
+          shouldIterate = false;
+        }
+
+        let json_data = result.data;
+
+        let temp_data_pool = {};
+        Object.values(json_data).map((invoice) => {
+          temp_data_pool[invoice["RECORDNO"]] = invoice;
+        });
+
+        firstObject = temp_data_pool[Object.keys(temp_data_pool)[0]];
+
+        // generating csv files for this data
+        csv_generator(
+          api_name,
+          api_category,
+          temp_data_pool,
+          firstObject,
+          query.objectName,
+          false
+        );
+      } while (shouldIterate);
+    }
   } catch (ex) {
-    console.log("Error from main: ", ex);
+    console.log(`${api_category} -> ${api_keyword} Error from main: `, ex);
   }
 }
 
@@ -115,6 +117,7 @@ async function Iterator() {
     const api_category_list = api_collection[api_category];
 
     Object.keys(api_category_list).map((api_keyword) => {
+      const api_name = api_category_list[api_keyword];
       query(api_keyword, api_name, api_category);
     });
   });
