@@ -7,7 +7,8 @@ async function csv_generator(
   api_category,
   data_pool,
   flattenedSampleObj,
-  csv_file_name
+  csv_file_name,
+  initial_batch
 ) {
   // Process and write data in batches
   const batchSize = 100; // Set the batch size as needed
@@ -81,12 +82,14 @@ async function csv_generator(
       setImmediate(writeNextBatch);
     } else {
       // No more data to process
-      console.log(csv_file_name + " file has been created");
+      // console.log(csv_file_name + " file has been created");
     }
   }
 
   // Start processing by writing the header and all batch
-  await write_header();
+  if (initial_batch) {
+    await write_header();
+  }
   await writeNextBatch();
 }
 
