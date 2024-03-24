@@ -296,8 +296,6 @@ async function query(api_keyword, api_name, api_category) {
     query.objectName = api_keyword;
     query.returnFormat = "json";
     query.pageSize = 1000;
-    // query.resultId = "7030372d776562303330ZfwHvoQwaDHcMgMEJphxAwAAAAY4";
-    // query.controlId = "1711005998476";
 
     let response = await client.execute(query);
     let _totalCount = response._results[0]._totalCount;
@@ -394,14 +392,29 @@ async function query(api_keyword, api_name, api_category) {
 }
 
 async function Iterator() {
-  Object.keys(api_collection).map((api_category) => {
+  for (let i = 0; i < Object.keys(api_collection).length; i++) {
+    const api_category = Object.keys(api_collection)[i];
+    console.log(" ========================================== ");
+    console.log("api_category: ", api_category);
+    console.log(" ========================================== ");
     const api_category_list = api_collection[api_category];
 
-    Object.keys(api_category_list).map((api_keyword) => {
-      const api_name = api_category_list[api_keyword];
-      query(api_keyword, api_name, api_category);
-    });
-  });
+    await Promise.all(
+      Object.keys(api_category_list).map(async (api_keyword) => {
+        const api_name = api_category_list[api_keyword];
+        await query(api_keyword, api_name, api_category);
+      })
+    );
+  }
+
+  // Object.keys(api_collection).map((api_category) => {
+  //   const api_category_list = api_collection[api_category];
+
+  //   Object.keys(api_category_list).map((api_keyword) => {
+  //     const api_name = api_category_list[api_keyword];
+  //     query(api_keyword, api_name, api_category);
+  //   });
+  // });
 }
 
 Iterator();
