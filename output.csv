@@ -1,0 +1,201 @@
+First Column,Second Column,Parent Folder Name
+Accounts Payable,AP Adjustment Lines.txt,available_data
+Accounts Payable,AP Adjustments.txt,available_data
+Accounts Payable,AP Payment Details.txt,available_data
+Accounts Payable,AP Payments.txt,available_data
+Accounts Payable,AP Summaries.txt,available_data
+Accounts Payable,AP Terms.txt,available_data
+Accounts Payable,Bill Lines.txt,available_data
+Accounts Payable,Bills.txt,available_data
+Accounts Payable,Recurring Bill Lines.txt,available_data
+Accounts Payable,Recurring Bills.txt,available_data
+Accounts Payable,Vendor Types.txt,available_data
+Accounts Payable,Vendors.txt,available_data
+Accounts Receivable,AR Adjustment Lines.txt,available_data
+Accounts Receivable,AR Adjustments.txt,available_data
+Accounts Receivable,AR Advances.txt,available_data
+Accounts Receivable,AR Payments.txt,available_data
+Accounts Receivable,AR Summaries.txt,available_data
+Accounts Receivable,AR Terms.txt,available_data
+Accounts Receivable,Customer Types.txt,available_data
+Accounts Receivable,Customers.txt,available_data
+Accounts Receivable,Invoices.txt,available_data
+Cash Management,Checking Account Reconciliations.txt,available_data
+Cash Management,Checking Accounts.txt,available_data
+Cash Management,Deposit Lines.txt,available_data
+Cash Management,Deposits.txt,available_data
+Cash Management,Fund Transfer Lines.txt,available_data
+Cash Management,Fund Transfers.txt,available_data
+Cash Management,Other Receipts.txt,available_data
+Employee Expenses,Employees.txt,available_data
+General Ledger,Account Group Hierarchy.txt,available_data
+General Ledger,Account Group Purposes.txt,available_data
+General Ledger,Account Groups.txt,available_data
+General Ledger,Accounts.txt,available_data
+General Ledger,Budget Details.txt,available_data
+General Ledger,Budgets.txt,available_data
+General Ledger,General Ledger Details.txt,available_data
+General Ledger,Statistical Accounts.txt,available_data
+General Ledger,Statistical Journal Entries.txt,available_data
+General Ledger,Statistical Journal Entry Lines.txt,available_data
+Inventory Control, Item GL Groups.txt,available_data
+Inventory Control,Available Inventory.txt,available_data
+Inventory Control,Inventory Total Details.txt,available_data
+Inventory Control,Item Groups.txt,available_data
+Inventory Control,Item Warehouse Details.txt,available_data
+Inventory Control,Items.txt,available_data
+Inventory Control,Units of Measure Related Units.txt,available_data
+Inventory Control,Units of Measure.txt,available_data
+Order Entry,Order Entry Transaction Definitions.txt,available_data
+Order Entry,Order Entry Transaction Lines.txt,available_data
+Order Entry,Order Entry Transaction Subtotals.txt,available_data
+Order Entry,Order Entry Transactions.txt,available_data
+Platform Services,Applications.txt,available_data
+Platform Services,Objects.txt,available_data
+Project and Resource Management,Project Statuses.txt,available_data
+Project and Resource Management,Projects.txt,available_data
+Project and Resource Management,Timesheet Entry Object.txt,available_data
+Project and Resource Management,Timesheets.txt,available_data
+Purchasing,Purchasing Transaction Definitions.txt,available_data
+Purchasing,Purchasing Transaction Lines.txt,available_data
+Purchasing,Purchasing Transaction Subtotals.txt,available_data
+Purchasing,Purchasing Transactions.txt,available_data
+Cash Management,Savings Accounts.txt,invalid_request
+Construction,Rate Table Accounts Payable Entries.txt,invalid_request
+Construction,Rate Table Credit Card Entries.txt,invalid_request
+Construction,Rate Table Employee Expense Entries.txt,invalid_request
+Construction,Rate Table General Ledger Entries.txt,invalid_request
+Construction,Rate Table Purchase Order Entries.txt,invalid_request
+Inventory Control,COGS Adjustments for Prior Periods.txt,invalid_request
+Sales Tax, VAT, and GST,Tax Details.txt,invalid_request
+Sales Tax, VAT, and GST,Tax Records.txt,invalid_request
+Accounts Payable,AP Adjustment Summaries.txt,not_found
+Accounts Payable,Vendor Approvals.txt,not_found
+Accounts Receivable,Territories.txt,not_found
+Cash Management,Other Receipt Lines.txt,not_found
+Consolidation,Ownership Entity Object.txt,not_found
+Consolidation,Run Global or Domestic Consolidation.txt,not_found
+Consolidation,Run Ownership Structure Consolidation.txt,not_found
+Construction,Rate Table Timesheet Entries.txt,not_found
+Contracts and Revenue Management,Contract Expense Schedule Entries.txt,not_found
+Customization Services ,Customization Services.txt,not_found
+Customization Services ,Smart Events.txt,not_found
+Data Delivery Service,DDS Objects.txt,not_found
+Employee Expenses,Expense Summaries .txt,not_found
+General Ledger,Trial Balances.txt,not_found
+Inventory Control,Stockable Kit Transactions.txt,not_found
+Platform Services,Dimensions.txt,not_found
+Platform Services,Records.txt,not_found
+Platform Services,Views.txt,not_found
+Sales Tax, VAT, and GST, Contact Tax Groups.txt,not_found
+General Ledger,Account Allocation Run.txt,not_subscribed
+General Ledger,Account Allocation.txt,not_subscribed
+Accounts Payable,AP Account Labels.txt,no_permission
+Accounts Receivable,AR Account Labels.txt,no_permission
+Accounts Receivable,Dunning Level Definitions.txt,no_permission
+Cash Management, Charge Card Accounts.txt,no_permission
+Cash Management,ACH Bank Configurations.txt,no_permission
+Cash Management,Bank Feeds.txt,no_permission
+Cash Management,Charge Payoff Lines.txt,no_permission
+Cash Management,Charge Payoffs.txt,no_permission
+Consolidation,Consolidation Books.txt,no_permission
+Consolidation,Consolidation Elimination Accounts.txt,no_permission
+Consolidation,Consolidation Entities.txt,no_permission
+Consolidation,Consolidation Journals.txt,no_permission
+Consolidation,Consolidation Override Accounts.txt,no_permission
+Consolidation,Ownership Child Entity Object.txt,no_permission
+Consolidation,Ownership Structure Detail Object.txt,no_permission
+Consolidation,Ownership Structures.txt,no_permission
+Construction,Accumulation Types.txt,no_permission
+Construction,AP Retainage Release Entries.txt,no_permission
+Construction,AP Retainage Releases.txt,no_permission
+Construction,AR Retainage Release Entries.txt,no_permission
+Construction,AR Retainage Releases.txt,no_permission
+Construction,Change Request Entries.txt,no_permission
+Construction,Change Request Status.txt,no_permission
+Construction,Change Request Types.txt,no_permission
+Construction,Change Requests.txt,no_permission
+Construction,Cost Types.txt,no_permission
+Construction,Employee Position.txt,no_permission
+Construction,Labor Class, Shift, and Union.txt,no_permission
+Construction,Labor Shifts.txt,no_permission
+Construction,Labor Unions.txt,no_permission
+Construction,Project Change Orders.txt,no_permission
+Construction,Project Contract Line Entries.txt,no_permission
+Construction,Project Contract Lines.txt,no_permission
+Construction,Project Contract Types.txt,no_permission
+Construction,Project Contracts.txt,no_permission
+Construction,Project Estimate Entries.txt,no_permission
+Construction,Project Estimate Types.txt,no_permission
+Construction,Project Estimates.txt,no_permission
+Construction,Rate Tables.txt,no_permission
+Construction,Standard Cost Types.txt,no_permission
+Construction,Standard Tasks.txt,no_permission
+Contracts and Revenue Management,Billing Price List Entries.txt,no_permission
+Contracts and Revenue Management,Billing Price List Entry Detail Tiers.txt,no_permission
+Contracts and Revenue Management,Billing Price List Entry Details.txt,no_permission
+Contracts and Revenue Management,Billing Price Lists.txt,no_permission
+Contracts and Revenue Management,Billing Template Details.txt,no_permission
+Contracts and Revenue Management,Billing Templates.txt,no_permission
+Contracts and Revenue Management,Contract Billing Schedule Entries.txt,no_permission
+Contracts and Revenue Management,Contract Billing Schedules.txt,no_permission
+Contracts and Revenue Management,Contract Expense 2 Schedules.txt,no_permission
+Contracts and Revenue Management,Contract Expense Schedules.txt,no_permission
+Contracts and Revenue Management,Contract Groups.txt,no_permission
+Contracts and Revenue Management,Contract Invoice Policies.txt,no_permission
+Contracts and Revenue Management,Contract Invoice Preview Lines.txt,no_permission
+Contracts and Revenue Management,Contract Invoice Runs.txt,no_permission
+Contracts and Revenue Management,Contract Invoices.txt,no_permission
+Contracts and Revenue Management,Contract Line Expenses.txt,no_permission
+Contracts and Revenue Management,Contract Lines.txt,no_permission
+Contracts and Revenue Management,Contract Revenue 2 Schedules.txt,no_permission
+Contracts and Revenue Management,Contract Revenue Schedules.txt,no_permission
+Contracts and Revenue Management,Contract Revenue Templates.txt,no_permission
+Contracts and Revenue Management,Contract Types.txt,no_permission
+Contracts and Revenue Management,Contracts.txt,no_permission
+Contracts and Revenue Management,MEA Allocations.txt,no_permission
+Contracts and Revenue Management,MEA Price List Entries.txt,no_permission
+Contracts and Revenue Management,MEA Price List Entry Lines.txt,no_permission
+Contracts and Revenue Management,MEA Price Lists.txt,no_permission
+Data Delivery Service,DDS Jobs.txt,no_permission
+Employee Expenses,Employee Groups.txt,no_permission
+Employee Expenses,Employee Types.txt,no_permission
+Employee Expenses,Expense Payment Types.txt,no_permission
+Employee Expenses,Expense Types.txt,no_permission
+Employee Expenses,Reimbursement Requests.txt,no_permission
+Employee Expenses,Reimbursements.txt,no_permission
+General Ledger,Account Allocation Groups.txt,no_permission
+General Ledger,Recurring Account Allocations.txt,no_permission
+General Ledger,Reporting Periods.txt,no_permission
+Inventory Control,Aisles.txt,no_permission
+Inventory Control,Bin Faces.txt,no_permission
+Inventory Control,Bin Sizes.txt,no_permission
+Inventory Control,Bins.txt,no_permission
+Inventory Control,Inventory Control Price Lists.txt,no_permission
+Inventory Control,Inventory Cycle Count Lines.txt,no_permission
+Inventory Control,Inventory Cycle Counts.txt,no_permission
+Inventory Control,Inventory Transaction Definitions.txt,no_permission
+Inventory Control,Inventory Transaction Lines.txt,no_permission
+Inventory Control,Inventory Transaction Subtotals.txt,no_permission
+Inventory Control,Inventory Transactions.txt,no_permission
+Inventory Control,Item Tax Groups.txt,no_permission
+Inventory Control,Rows.txt,no_permission
+Inventory Control,Warehouse Groups.txt,no_permission
+Inventory Control,Warehouse Transfers.txt,no_permission
+Inventory Control,Warehouses.txt,no_permission
+Inventory Control,Zones.txt,no_permission
+Order Entry,Order Entry Price Lists.txt,no_permission
+Order Entry,Recurring Order Entry Transactions.txt,no_permission
+Project and Resource Management,Earning Types.txt,no_permission
+Project and Resource Management,Positions and Skills.txt,no_permission
+Project and Resource Management,Project Groups.txt,no_permission
+Project and Resource Management,Project Resources.txt,no_permission
+Project and Resource Management,Task Resources.txt,no_permission
+Project and Resource Management,Tasks.txt,no_permission
+Project and Resource Management,Time Types.txt,no_permission
+Project and Resource Management,Transaction Rules.txt,no_permission
+Purchasing,Purchasing Price Lists.txt,no_permission
+Purchasing,Vendor Compliance Definitions.txt,no_permission
+Purchasing,Vendor Compliance Records.txt,no_permission
+Purchasing,Vendor Compliance Types.txt,no_permission
+Sales Tax, VAT, and GST,Tax Solutions.txt,no_permission

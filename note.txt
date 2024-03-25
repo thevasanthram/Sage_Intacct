@@ -1,0 +1,61 @@
+OnlineResponse {
+    _xml: { response: { control: [Object], operation: [Object] } },
+    _control: Control {
+      _status: 'success',
+      _senderId: 'pinnacle-mep',
+      _controlId: '1711376852110',
+      _uniqueId: 'false',
+      _dtdVersion: '3.0'
+    },
+    _results: [
+      Result {
+        _status: 'success',
+        _functionName: 'readByQuery',
+        _controlId: '2729fda1-6dc3-4d86-a6f2-d547f4eb81fb',
+        _listType: 'arinvoice',
+        _totalCount: 44281,
+        _count: 1000,
+        _numRemaining: 43281,
+        _resultId: '7030372d776562303330ZgGJ04fUhVQBtPpvajfIZQAAABs4',
+        _data: [Array]
+      }
+    ],
+    _authentication: Authentication {
+      _status: 'success',
+      _userId: 'vjoshi',
+      _companyId: 'pinnacle-mep',
+      _entityId: '',
+      _sessionTimestamp: '2024-03-25T14:27:31+00:00',
+      _sessionTimeout: '2024-03-26T14:27:31+00:00'
+    }
+  }
+  Result Id:  7030372d776562303330ZgGJ04fUhVQBtPpvajfIZQAAABs4
+  _totalCount:  44281
+  _count:  1000
+  _numRemaining:  43281
+  ============================================================
+  Result Id:  7030372d776562303330ZgGJ04fUhVQBtPpvajfIZQAAABs4
+  _totalCount:  44281
+  _count:  1000
+  _numRemaining:  42281
+  ============================================================
+  Result Id:  7030372d776562303330ZgGJ04fUhVQBtPpvajfIZQAAABs4
+  _totalCount:  44281
+  _count:  1000
+  _numRemaining:  41281
+  ============================================================
+  Result Id:  7030372d776562303330ZgGJ04fUhVQBtPpvajfIZQAAABs4
+  _totalCount:  44281
+  _count:  1000
+  _numRemaining:  40281
+  ============================================================
+  Result Id:  7030372d776562303330ZgGJ04fUhVQBtPpvajfIZQAAABs4
+  _totalCount:  44281
+  _count:  1000
+  _numRemaining:  39281
+  ============================================================
+  Result Id:  7030372d776562303330ZgGJ04fUhVQBtPpvajfIZQAAABs4
+  _totalCount:  44281
+  _count:  281
+  _numRemaining:  0
+  ============================================================
