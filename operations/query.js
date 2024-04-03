@@ -361,65 +361,65 @@ async function query(api_keyword, api_name, api_category) {
       );
     }
 
-    // if (json_data.length > 0) {
-    //   let data_pool = {};
-    //   Object.values(json_data).map((invoice) => {
-    //     data_pool[invoice["RECORDNO"]] = invoice;
-    //   });
+    if (json_data.length > 0) {
+      let data_pool = {};
+      Object.values(json_data).map((invoice) => {
+        data_pool[invoice["RECORDNO"]] = invoice;
+      });
 
-    //   let firstObject = data_pool[Object.keys(data_pool)[0]];
+      let firstObject = data_pool[Object.keys(data_pool)[0]];
 
-    //   // generating csv files for this data
-    //   await csv_generator(
-    //     api_name,
-    //     api_category,
-    //     data_pool,
-    //     firstObject,
-    //     query.objectName,
-    //     true
-    //   );
+      // generating csv files for this data
+      await csv_generator(
+        api_name,
+        api_category,
+        data_pool,
+        firstObject,
+        query.objectName,
+        true
+      );
 
-    //   let shouldIterate = _numRemaining ? true : false;
+      let shouldIterate = _numRemaining ? true : false;
 
-    //   while (shouldIterate) {
-    //     let query = new IA.Functions.Common.ReadMore();
-    //     query.resultId = response._results[0]._resultId;
+      while (shouldIterate) {
+        let query = new IA.Functions.Common.ReadMore();
+        query.resultId = response._results[0]._resultId;
 
-    //     response = await client.execute(query);
-    //     const result = response.getResult();
+        response = await client.execute(query);
+        const result = response.getResult();
 
-    //     _totalCount = response._results[0]._totalCount;
-    //     _numRemaining = response._results[0]._numRemaining;
+        _totalCount = response._results[0]._totalCount;
+        _numRemaining = response._results[0]._numRemaining;
 
-    //     console.log(
-    //       `${api_name} -> ${api_keyword} -> remaining records: `,
-    //       _numRemaining
-    //     );
+        console.log(
+          `${api_name} -> ${api_keyword} -> remaining records: `,
+          _numRemaining
+        );
 
-    //     if (_numRemaining == 0) {
-    //       shouldIterate = false;
-    //     }
+        if (_numRemaining == 0) {
+          shouldIterate = false;
+        }
 
-    //     let json_data = result.data;
+        let json_data = result.data;
 
-    //     let temp_data_pool = {};
-    //     Object.values(json_data).map((invoice) => {
-    //       temp_data_pool[invoice["RECORDNO"]] = invoice;
-    //     });
+        let temp_data_pool = {};
+        Object.values(json_data).map((invoice) => {
+          temp_data_pool[invoice["RECORDNO"]] = invoice;
+        });
 
-    //     firstObject = temp_data_pool[Object.keys(temp_data_pool)[0]];
+        firstObject = temp_data_pool[Object.keys(temp_data_pool)[0]];
 
-    //     // generating csv files for this data
-    //     await csv_generator(
-    //       api_name,
-    //       api_category,
-    //       temp_data_pool,
-    //       firstObject,
-    //       query.objectName,
-    //       false
-    //     );
-    //   }
-    // }
+        // generating csv files for this data
+        await csv_generator(
+          api_name,
+          api_category,
+          temp_data_pool,
+          firstObject,
+          query.objectName,
+          false
+        );
+      }
+    }
   } catch (ex) {
     error_counting = error_counting + 1;
     // console.log(`${api_category} -> ${api_keyword} Error from main: `, ex);
