@@ -321,7 +321,7 @@ async function query(api_keyword, api_name, api_category) {
         folderPath,
         api_category + "_" + api_name.replace(/\//g, "or") + ".txt"
       );
- 
+
       fs.writeFile(
         filePath,
         JSON.stringify(json_data),
@@ -427,6 +427,7 @@ async function query(api_keyword, api_name, api_category) {
     // if theres a exceptional response in some api
     // Create the folder if it doesn't exist
 
+    console.log("ex: ", ex);
     const error_text = ex["errors"][0];
     let folderPath = "";
     if (
