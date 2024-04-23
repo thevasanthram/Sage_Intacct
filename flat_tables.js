@@ -72,26 +72,26 @@ const api_collection = {
     "Vendor Approvals": "noObject",
   },
   "Accounts Receivable": {
-    "AR Account Labels": "ARACCOUNTLABEL",
-    "AR Adjustments": "ARADJUSTMENT",
-    "AR Adjustment Lines": "ARADJUSTMENTITEM",
-    "AR Advances": "ARADVANCE",
-    "AR Aging": "default",
-    "AR Payments": "ARPYMT",
-    "AR Summaries": "ARINVOICEBATCH",
-    "AR Adjustment Summaries": "default",
-    "AR Terms": "ARTERM",
-    "Customer Bank Accounts": "default",
-    "Customer Charge Cards": "default",
-    "Customer Groups": "CUSTOMERGROUP",
-    "Customer Types": "CUSTTYPE",
-    Customers: "CUSTOMER",
-    "Customer Email Templates": "CUSTOMEREMAILTEMPLATE",
-    "Dunning Level Definitions": "DUNNINGDEFINITION",
+    // "AR Account Labels": "ARACCOUNTLABEL",
+    // "AR Adjustments": "ARADJUSTMENT",
+    // "AR Adjustment Lines": "ARADJUSTMENTITEM",
+    // "AR Advances": "ARADVANCE",
+    // "AR Aging": "default",
+    // "AR Payments": "ARPYMT",
+    // "AR Summaries": "ARINVOICEBATCH",
+    // "AR Adjustment Summaries": "default",
+    // "AR Terms": "ARTERM",
+    // "Customer Bank Accounts": "default",
+    // "Customer Charge Cards": "default",
+    // "Customer Groups": "CUSTOMERGROUP",
+    // "Customer Types": "CUSTTYPE",
+    // Customers: "CUSTOMER",
+    // "Customer Email Templates": "CUSTOMEREMAILTEMPLATE",
+    // "Dunning Level Definitions": "DUNNINGDEFINITION",
     Invoices: "ARINVOICE",
-    "Recurring Invoices": "ARRECURINVOICE",
-    "Recurring Invoice Lines": "ARRECURINVOICEENTRY",
-    Territories: "default",
+    // "Recurring Invoices": "ARRECURINVOICE",
+    // "Recurring Invoice Lines": "ARRECURINVOICEENTRY",
+    // Territories: "default",
   },
   "Employee Expenses": {
     "Employee Groups": "EMPLOYEEGROUP",
@@ -317,15 +317,28 @@ async function start() {
       Object.keys(api_category_list).map(async (api_name) => {
         total_counting = total_counting + 1;
 
+        let data_pool = [];
+        let result_id = "";
+        let _numRemaining = 0;
+
         // fetching data from respective apis
         const api_keyword = api_category_list[api_name];
-        await query(
-          sql_request,
-          api_keyword,
-          api_name,
-          api_category,
-          filtering_condition
-        );
+
+        let fetching_data_status = false;
+        do {
+          ({ fetching_data_status, data_pool, result_id, _numRemaining } =
+            await query(
+              sql_request,
+              api_keyword,
+              api_name,
+              api_category,
+              filtering_condition,
+              data_pool,
+              result_id,
+              _numRemaining
+            ));
+          console.log("fetching_data_status: ", fetching_data_status);
+        } while (!fetching_data_status);
       })
     );
   }
