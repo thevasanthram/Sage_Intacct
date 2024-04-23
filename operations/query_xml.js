@@ -1,0 +1,17 @@
+<query>
+    <object>ARINVOICE</object>
+    <select>
+        <field>RECORDNO</field>
+        <field>CUSTOMERNAME</field>
+    </select>
+    <filter>
+        <greaterthanorequalto>
+            <field>WHENCREATED</field>
+            <value>2024-04-01</value>
+        </greaterthanorequalto>
+        <lessthan>
+            <field>WHENCREATED</field>
+            <value>2024-04-15</value>
+        </lessthan>
+    </filter>
+</query>

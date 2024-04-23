@@ -1,57 +1,41 @@
-look_up();
+const {
+  Query,
+} = require("@intacct/intacct-sdk/dist/Functions/Common/NewQuery");
 
-async function look_up() {
+async function query() {
   const bootstrap = require("./../bootstrap");
   const IA = require("@intacct/intacct-sdk");
 
   try {
     const client = bootstrap.client();
 
-    console.log(IA.Functions.Common.NewQuery);
-    console.log("-------");
-    console.log(IA.Functions.Common.NewQuery.QueryFilter.Filter);
-    console.log("-------");
+    let queryObj = new Query();
+    queryObj.objectName = "ARINVOICE";
 
-    // Common: {
-    //   Read: [Getter],
-    //   ReadByName: [Getter],
-    //   ReadByQuery: [Getter],
-    //   ReadMore: [Getter],
-    //   Inspect: [Getter],
-    //   Lookup: [Getter],
-    //   GetList: [Object],
-    //   Query: [Object],
-    //   NewQuery: [Object]
-    // },
+    // // Construct the filter for date
+    // let filter = new IA.Functions.Common.NewQuery.QueryFilter.Filter(
+    //   "WHENCREATED"
+    // );
 
-    let look_up = new IA.Functions.Common.ReadByQuery();
-    look_up.objectName = "ARINVOICE";
+    // // Use ISO 8601 date format
+    // filter.greaterThanOrEqualTo("2024-04-01");
+    // filter.lessThan("2024-04-15");
 
-    // Construct the filter for date
-    let filter = new IA.Functions.Common.NewQuery.QueryFilter.Filter('WHENCREATED');
-    let field = new IA.Functions.Common.NewQuery.QuerySelect.Field(
-      "WHENCREATED"
-    );
-    // let greaterThanDate = new IA.Types.GreaterThan("WHENCREATED", "2023-02-22");
-    // let lessThanDate = new IA.Types.LessThan("WHENCREATED", "2023-02-24");
-    // filter.filter.add(greaterThanDate);
-    // filter.add(lessThanDate);
+    // queryObj.filter = filter;
 
-    filter.GREATER_THAN_OR_EQUAL_TO = "2024-02-23T00:00:00";
-    filter.LESS_THAN = "2024-02-24T00:00:00";
-
-    look_up.filter = filter;
-
-    const response = await client.execute(look_up);
-    console.log(response);
+    const response = await client.execute(queryObj);
     const result = response.getResult();
-
     let json_data = result.data;
 
-    console.log("Result:", json_data[0]["RECORDNO"]);
     console.log("Result:", json_data.length);
-    // console.log(JSON.stringify(json_data));
+    console.log("First Record Number:", json_data[0]["RECORDNO"]);
+    console.log("First Record Created Date:", json_data[0]["WHENCREATED"]);
+    console.log("Second Record Number:", json_data[1]["RECORDNO"]);
+    console.log("Second Record Created Date:", json_data[1]["WHENCREATED"]);
+    // Process retrieved data further as needed
   } catch (ex) {
     console.log("Error from main: ", ex);
   }
 }
+
+query();
