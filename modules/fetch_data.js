@@ -165,6 +165,7 @@ async function query(
       ex.response.control.status === "failure" &&
       ex.response.errormessage
     ) {
+      fetching_data_status = true;
       console.log(
         "Error Message:",
         ex.response.errormessage.error.description2
