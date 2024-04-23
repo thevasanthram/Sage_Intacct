@@ -160,26 +160,28 @@ async function query(
   } catch (ex) {
     console.log("Error from main: ", ex);
 
-    const error_text = ex["errors"][0];
+    if (ex["errors"] && ex["errors"][0]) {
+      const error_text = ex["errors"][0];
 
-    if (
-      error_text.indexOf("Account allocation module is not subscribed") !== -1
-    ) {
-      fetching_data_status = true;
-    } else if (error_text.indexOf("Query Failed Object definition") !== -1) {
-      fetching_data_status = true;
-    } else if (
-      error_text.indexOf(
-        "You do not have permission for API operation READ_BY_QUERY"
-      ) !== -1
-    ) {
-      fetching_data_status = true;
-    } else if (
-      error_text.indexOf(
-        "API operation 'READ_BY_QUERY' cannot be performed on objects of type"
-      ) !== -1
-    ) {
-      fetching_data_status = true;
+      if (
+        error_text.indexOf("Account allocation module is not subscribed") !== -1
+      ) {
+        fetching_data_status = true;
+      } else if (error_text.indexOf("Query Failed Object definition") !== -1) {
+        fetching_data_status = true;
+      } else if (
+        error_text.indexOf(
+          "You do not have permission for API operation READ_BY_QUERY"
+        ) !== -1
+      ) {
+        fetching_data_status = true;
+      } else if (
+        error_text.indexOf(
+          "API operation 'READ_BY_QUERY' cannot be performed on objects of type"
+        ) !== -1
+      ) {
+        fetching_data_status = true;
+      }
     } else {
       fetching_data_status = false;
     }
