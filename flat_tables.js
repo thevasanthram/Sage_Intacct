@@ -337,7 +337,6 @@ async function start() {
               result_id,
               _numRemaining
             ));
-          console.log("fetching_data_status: ", fetching_data_status);
         } while (!fetching_data_status);
       })
     );

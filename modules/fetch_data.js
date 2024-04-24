@@ -13,10 +13,10 @@ async function query(
   result_id,
   _numRemaining
 ) {
-  console.log("api_keyword: ", api_keyword);
-  console.log("api_name: ", api_name);
-  console.log("api_category: ", api_category);
-  console.log("filtering_condition: ", filtering_condition);
+  // console.log("api_keyword: ", api_keyword);
+  // console.log("api_name: ", api_name);
+  // console.log("api_category: ", api_category);
+  // console.log("filtering_condition: ", filtering_condition);
 
   let fetching_data_status = false;
 
@@ -24,8 +24,6 @@ async function query(
     let client = bootstrap.client();
 
     let header_data;
-
-    console.log("result_id.length: ", result_id.length);
 
     if (result_id.length == 0) {
       // first time
@@ -97,8 +95,6 @@ async function query(
       .replace(/ /g, "_")
       .replace(/-/g, "_")
       .replace("/", "_");
-
-    console.log("_numRemaining: ", _numRemaining);
 
     let shouldIterate = _numRemaining ? true : false;
 
@@ -184,6 +180,13 @@ async function query(
       }
     } else {
       fetching_data_status = false;
+      console.log(
+        "============================================================="
+      );
+      console.log("fetching_data_status: ", fetching_data_status);
+      console.log(
+        "============================================================="
+      );
     }
   }
 
