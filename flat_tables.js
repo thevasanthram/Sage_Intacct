@@ -342,6 +342,8 @@ async function start() {
     );
   }
 
+  console.log("<- COMPLETED ->");
+
   // console.log("total_counting : ", total_counting);
   // console.log("available_counting : ", available_counting);
   // console.log("empty_counting : ", empty_counting);
