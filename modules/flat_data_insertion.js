@@ -33,10 +33,10 @@ async function flat_data_insertion(
           ...Object.values(currentObj).map((value) => {
             if (typeof value == "string") {
               return value.includes(`'`)
-                ? `${value.replace(/'/g, `''`)}`
-                : `${value}`;
+                ? `${String(value.replace(/'/g, `''`))}`
+                : `${String(value)}`;
             } else {
-              return value;
+              return String(value);
             }
           })
         ); // Spread the elements of the row array as arguments
