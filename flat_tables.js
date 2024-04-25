@@ -14,14 +14,14 @@ const api_collection = {
     "Entity Level Account Titles": "ACCTTITLEBYLOC",
     Budgets: "GLBUDGETHEADER",
     "Budget Details": "GLBUDGETITEM",
-    "General Ledger Details": "GLDETAIL",
+    // "General Ledger Details": "GLDETAIL",
     "Journal Entries": "GLBATCH",
-    "Journal Entry Lines": "GLENTRY",
+    // "Journal Entry Lines": "GLENTRY",
     "Recurring Account Allocations": "RECURGLACCTALLOCATION",
     "Reporting Periods": "REPORTINGPERIOD",
     "Statistical Accounts": "STATACCOUNT",
     "Statistical Journal Entries": "GLBATCH",
-    "Statistical Journal Entry Lines": "GLENTRY",
+    // "Statistical Journal Entry Lines": "GLENTRY",
     "Transaction Allocations": "ALLOCATION",
     "Transaction Allocation Lines": "ALLOCATIONENTRY",
     "Trial Balances": "default",
@@ -282,7 +282,7 @@ const api_collection = {
   },
 };
 
-let today = new Date("2024-04-23");
+let today = new Date("2024-04-25");
 
 today.setUTCHours(7, 0, 0, 0); // IST 12.30 PM
 
