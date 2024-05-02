@@ -282,7 +282,7 @@ const api_collection = {
   },
 };
 
-let today = new Date("2024-04-25");
+let today = new Date();
 
 today.setUTCHours(7, 0, 0, 0); // IST 12.30 PM
 
@@ -336,7 +336,7 @@ async function start() {
               data_pool,
               result_id,
               _numRemaining,
-              'FLASHING'
+              "FLASHING"
             ));
         } while (!fetching_data_status);
       })
