@@ -2,6 +2,7 @@ const bootstrap = require("./../bootstrap");
 const IA = require("@intacct/intacct-sdk");
 const create_flat_table = require("./create_flat_table");
 const flat_data_insertion = require("./flat_data_insertion");
+const hvac_merge_insertion = require("./hvac_merge_insertion");
 
 async function query(
   sql_request,
@@ -11,7 +12,8 @@ async function query(
   filtering_condition,
   data_pool,
   result_id,
-  _numRemaining
+  _numRemaining,
+  insertion_mode
 ) {
   // console.log("api_keyword: ", api_keyword);
   // console.log("api_name: ", api_name);
@@ -38,8 +40,10 @@ async function query(
         // GreaterThanOrEqualTo condition
         greaterThanOrEqualTo =
           new IA.Functions.Common.Query.Comparison.GreaterThanOrEqualTo.GreaterThanOrEqualToDateTime();
-        greaterThanOrEqualTo.field = "WHENCREATED";
-        greaterThanOrEqualTo.value = new Date("2024-04-04");
+        greaterThanOrEqualTo.field = filtering_condition["column"];
+        greaterThanOrEqualTo.value = new Date(
+          filtering_condition["greaterThanOrEqualTo"]
+        );
 
         query.query = greaterThanOrEqualTo;
       }
@@ -48,8 +52,8 @@ async function query(
         // LessThan condition
         lessThan =
           new IA.Functions.Common.Query.Comparison.LessThan.LessThanDateTime();
-        lessThan.field = "WHENCREATED";
-        lessThan.value = new Date("2024-04-05");
+        lessThan.field = filtering_condition["column"];
+        lessThan.value = new Date(filtering_condition["lessThan"]);
 
         query.query = lessThan;
       }
@@ -124,14 +128,26 @@ async function query(
       if (data_pool.length >= 50000) {
         // write into db
         let data_insertion_status = false;
-        do {
-          data_insertion_status = await flat_data_insertion(
-            sql_request,
-            data_pool,
-            header_data,
-            table_name
-          );
-        } while (!data_insertion_status);
+
+        if (insertion_mode == "FLASHING") {
+          do {
+            data_insertion_status = await flat_data_insertion(
+              sql_request,
+              data_pool,
+              header_data,
+              table_name
+            );
+          } while (!data_insertion_status);
+        } else {
+          do {
+            data_insertion_status = await hvac_merge_insertion(
+              sql_request,
+              data_pool,
+              header_data,
+              table_name
+            );
+          } while (!data_insertion_status);
+        }
 
         // free data_pool
         data_pool = [];
@@ -140,24 +156,37 @@ async function query(
 
     if (data_pool.length > 0) {
       let data_insertion_status = false;
-      do {
-        data_insertion_status = await flat_data_insertion(
-          sql_request,
-          data_pool,
-          header_data,
-          table_name
-        );
-      } while (!data_insertion_status);
+      if (insertion_mode == "FLASHING") {
+        do {
+          data_insertion_status = await flat_data_insertion(
+            sql_request,
+            data_pool,
+            header_data,
+            table_name
+          );
+        } while (!data_insertion_status);
+      } else {
+        do {
+          data_insertion_status = await hvac_merge_insertion(
+            sql_request,
+            data_pool,
+            header_data,
+            table_name
+          );
+        } while (!data_insertion_status);
+      }
 
       data_pool = [];
     }
 
     fetching_data_status = true;
   } catch (ex) {
-    console.log("Error from main: ", ex);
+    console.log(`Error from main- ${api_category} -> ${api_name}: `, ex);
 
     if (ex["errors"] && ex["errors"][0]) {
       const error_text = ex["errors"][0];
+
+      console.log("error_text: ", error_text);
 
       if (
         error_text.indexOf("Account allocation module is not subscribed") !== -1
@@ -174,6 +203,12 @@ async function query(
       } else if (
         error_text.indexOf(
           "API operation 'READ_BY_QUERY' cannot be performed on objects of type"
+        ) !== -1
+      ) {
+        fetching_data_status = true;
+      } else if (
+        error_text.indexOf(
+          "Error There was an error processing the request"
         ) !== -1
       ) {
         fetching_data_status = true;

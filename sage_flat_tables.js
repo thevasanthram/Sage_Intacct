@@ -335,7 +335,8 @@ async function start() {
               filtering_condition,
               data_pool,
               result_id,
-              _numRemaining
+              _numRemaining,
+              'FLASHING'
             ));
         } while (!fetching_data_status);
       })
