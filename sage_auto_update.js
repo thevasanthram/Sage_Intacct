@@ -282,12 +282,11 @@ const api_collection = {
   },
 };
 
-let yesterday = new Date();
-let today = new Date();
-
+let today = new Date(); // Today at 00:00 IST
 today.setUTCHours(7, 0, 0, 0); // IST 12.30 PM
-yesterday.setUTCHours(7, 0, 0, 0);
-yesterday.setDate(yesterday.getDate() - 1);
+
+let yesterday = new Date(today);
+yesterday.setDate(yesterday.getDate() - 1); // Yesterday at 00:00 IST
 
 const filtering_condition = {
   column: "WHENMODIFIED",
