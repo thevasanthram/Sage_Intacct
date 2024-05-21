@@ -353,21 +353,26 @@ async function start() {
   // console.log("error_counting : ", error_counting);
 }
 
-
 async function orchestrate() {
   // Step 1: Call start_pipeline
   await start();
 
   do {
     // finding the next batch time
-    filtering_condition["greaterThanOrEqualTo"] = filtering_condition["lessThan"];
+    filtering_condition["greaterThanOrEqualTo"] =
+      filtering_condition["lessThan"];
 
-    const next_batch_time = new Date(filtering_condition["greaterThanOrEqualTo"]);
+    const next_batch_time = new Date(
+      filtering_condition["greaterThanOrEqualTo"]
+    );
 
     next_batch_time.setDate(next_batch_time.getDate() + 1);
     next_batch_time.setUTCHours(7, 0, 0, 0);
 
-    console.log("finished batch: ", filtering_condition["greaterThanOrEqualTo"]);
+    console.log(
+      "finished batch: ",
+      filtering_condition["greaterThanOrEqualTo"]
+    );
     console.log("next batch: ", next_batch_time);
 
     const now = new Date();
