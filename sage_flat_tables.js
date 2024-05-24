@@ -1,5 +1,7 @@
 const create_sql_connection = require("./modules/create_sql_connection");
 const query = require("./modules/fetch_data");
+const fs = require("fs");
+const path = require("path");
 
 const api_collection = {
   "General Ledger": {
@@ -292,19 +294,28 @@ const filtering_condition = {
   lessThan: today.toISOString(), // "2024-02-12T00:00:00.00Z"
 };
 
+async function flush_database(sql_request) {
+  const schemaPath = path.join(__dirname, "/modules/drop_all_table.sql"); // Use an absolute path
+  const drop_all_table_query = fs.readFileSync(schemaPath, "utf-8");
+
+  await sql_request.query(drop_all_table_query);
+}
+
 async function start() {
+  // creating a client for azure sql database operations
+  let sql_request = "";
+  do {
+    sql_request = await create_sql_connection();
+  } while (!sql_request);
+
+  await flush_database(sql_request);
+
   const data_hub = {};
 
   let total_counting = 0;
   let available_counting = 0;
   let empty_counting = 0;
   let error_counting = 0;
-
-  // creating a client for azure sql database operations
-  let sql_request = "";
-  do {
-    sql_request = await create_sql_connection();
-  } while (!sql_request);
 
   for (let i = 0; i < Object.keys(api_collection).length; i++) {
     const api_category = Object.keys(api_collection)[i];
