@@ -212,16 +212,39 @@ async function query(
         ) !== -1
       ) {
         fetching_data_status = true;
+      } else if (
+        error_text.indexOf("You're not authorized to perform this action") !==
+        -1
+      ) {
+        fetching_data_status = true;
+      } else if (
+        error_text.indexOf(
+          "This feature is disabled for your company or your current user"
+        ) !== -1
+      ) {
+        fetching_data_status = true;
+      } else if (
+        error_text.indexOf("Object type advaudithistory is not valid") !== -1
+      ) {
+        fetching_data_status = true;
       }
     } else {
-      fetching_data_status = false;
-      console.log(
-        "============================================================="
-      );
-      console.log("fetching_data_status: ", fetching_data_status);
-      console.log(
-        "============================================================="
-      );
+      if (
+        ex.message.includes(
+          "FetchError: network timeout at: https://api.intacct.com/ia/xml/xmlgw.phtml"
+        )
+      ) {
+        fetching_data_status = true;
+      } else {
+        fetching_data_status = false;
+        console.log(
+          "============================================================="
+        );
+        console.log("fetching_data_status: ", fetching_data_status);
+        console.log(
+          "============================================================="
+        );
+      }
     }
   }
 
