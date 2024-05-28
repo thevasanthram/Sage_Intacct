@@ -11,6 +11,9 @@ let empty_counting = 0;
 let error_counting = 0;
 
 const api_collection = {
+  // 'Company and Console': {
+  //   Entites: 'LOCATIONENTITY'
+  // }
   "General Ledger": {
     "Account Allocation Groups": "GLACCTALLOCATIONGRP",
     "Account Allocation": "GLACCTALLOCATION",
