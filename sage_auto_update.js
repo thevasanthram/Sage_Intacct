@@ -2,39 +2,39 @@ const create_sql_connection = require("./modules/create_sql_connection");
 const query = require("./modules/fetch_data");
 
 const api_collection = {
-  "Company and Console" :{
+  "Company and Console": {
     "Advanced Audit Trails": "ADVAUDITHISTORY",
-    "API Sessions" : "default",
-    "Attachments" : "supdoc",
+    "API Sessions": "default",
+    Attachments: "supdoc",
     "Attachment Folders": "supdocfolder",
-    "Audit History" : "AUDITHISTORY",
-    "Audit Trail Logs" : "default",
-    "Class Groups" : "CLASSGROUP",
-    "Classes" : "CLASS",
-    "Contacts" : "CONTACT",
-    "Department Groups" : "DEPARTMENTGROUP",
-    "Departments" : "DEPARTMENT",
-    "Entities" : "LOCATIONENTITY",
-    "Exchange Rate Type" : "EXCHANGERATETYPES",
-    "Exchange Rate" : "EXCHANGERATE",
-    "Exchange Rate Entry" : "EXCHANGERATEENTRY",
-    "Financial Setup" : "ACCRUAL",
-    "Global Transaction Security Setup" : "AFRSETUP",
-    "Inter-Entity Transaction Configuration" : "INTERENTITYSETUP",
-    "Location Groups" : 'LOCATIONGROUP',
-    "Queue Administration" : "JOBQUEUERECORD",
-    "Roles" : "ROLES",
-    "Role Assignments" : "ROLEASSIGNMENT",
-    "Role Permissions" : 'ROLEPOLICYASSIGNMENT',
-    "User Groups" : "USERGROUP" ,
-    "User Group Members" : "MEMBERUSERGROUP",
-    "User Group Role Assignments" : "ROLEGROUPS" ,
-    "Users" : "USERINFO",
-    "User Permissions" : "USERRIGHTS",
-    "User Roles" : "USERROLES",
-    "User Restrictions" : "USERRESTRICTION",
-    "User Date and Time Formatting Preferences" : "RECORDNO"
-},
+    "Audit History": "AUDITHISTORY",
+    "Audit Trail Logs": "default",
+    "Class Groups": "CLASSGROUP",
+    Classes: "CLASS",
+    Contacts: "CONTACT",
+    "Department Groups": "DEPARTMENTGROUP",
+    Departments: "DEPARTMENT",
+    Entities: "LOCATIONENTITY",
+    "Exchange Rate Type": "EXCHANGERATETYPES",
+    "Exchange Rate": "EXCHANGERATE",
+    "Exchange Rate Entry": "EXCHANGERATEENTRY",
+    "Financial Setup": "ACCRUAL",
+    "Global Transaction Security Setup": "AFRSETUP",
+    "Inter-Entity Transaction Configuration": "INTERENTITYSETUP",
+    "Location Groups": "LOCATIONGROUP",
+    "Queue Administration": "JOBQUEUERECORD",
+    Roles: "ROLES",
+    "Role Assignments": "ROLEASSIGNMENT",
+    "Role Permissions": "ROLEPOLICYASSIGNMENT",
+    "User Groups": "USERGROUP",
+    "User Group Members": "MEMBERUSERGROUP",
+    "User Group Role Assignments": "ROLEGROUPS",
+    Users: "USERINFO",
+    "User Permissions": "USERRIGHTS",
+    "User Roles": "USERROLES",
+    "User Restrictions": "USERRESTRICTION",
+    "User Date and Time Formatting Preferences": "RECORDNO",
+  },
   "General Ledger": {
     "Account Allocation Groups": "GLACCTALLOCATIONGRP",
     "Account Allocation": "GLACCTALLOCATION",
@@ -395,9 +395,7 @@ async function orchestrate() {
     filtering_condition["greaterThanOrEqualTo"] =
       filtering_condition["lessThan"];
 
-    const next_batch_time = new Date(
-      filtering_condition["greaterThanOrEqualTo"]
-    );
+    const next_batch_time = new Date(filtering_condition["lessThan"]);
 
     next_batch_time.setDate(next_batch_time.getDate() + 1);
     next_batch_time.setUTCHours(7, 0, 0, 0);
