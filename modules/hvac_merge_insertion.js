@@ -49,6 +49,8 @@ async function hvac_merge_insertion(
       })
     );
 
+    // console.log("started to enter db");
+
     // Bulk insert into the temporary table
     await sql_pool.bulk(table);
 

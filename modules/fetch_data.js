@@ -154,6 +154,8 @@ async function query(
       }
     }
 
+    // console.log("fetching done");
+
     if (data_pool.length > 0) {
       let data_insertion_status = false;
       if (insertion_mode == "FLASHING") {
@@ -166,6 +168,7 @@ async function query(
           );
         } while (!data_insertion_status);
       } else {
+        // console.log("enteirng to hvac_merge_insertion");
         do {
           data_insertion_status = await hvac_merge_insertion(
             sql_request,
