@@ -132,17 +132,24 @@ async function query(
         let data_insertion_status = false;
 
         const lenghthiest_header = await find_lenghthiest_header(data_pool);
-        console.log("lenghthiest_header: ", lenghthiest_header);
+        // console.log("lenghthiest_header: ", lenghthiest_header);
 
-        const saved_record_count_response = await sql_request.query(
-          `SELECT COUNT(*) as totalCount FROM ${table_name};`
-        );
+        let is_first_time = false;
+        try {
+          const saved_record_count_response = await sql_request.query(
+            `SELECT COUNT(*) as totalCount FROM ${table_name};`
+          );
 
-        const saved_record_count =
-          saved_record_count_response.recordset[0]["totalCount"];
+          saved_record_count =
+            saved_record_count_response.recordset[0]["totalCount"];
+
+          is_first_time = !saved_record_count ? true : false;
+        } catch (err) {
+          is_first_time = true;
+        }
 
         if (
-          !saved_record_count &&
+          is_first_time &&
           (insertion_mode == "FLASHING" || insertion_mode == "UPADTE-FLASHING")
         ) {
           // first time
@@ -197,23 +204,30 @@ async function query(
 
     // console.log("fetching done");
 
-    console.log("insertion_mode: ", insertion_mode);
+    // console.log("insertion_mode: ", insertion_mode);
 
     if (data_pool.length > 0) {
       let data_insertion_status = false;
 
       const lenghthiest_header = await find_lenghthiest_header(data_pool);
-      console.log("lenghthiest_header: ", lenghthiest_header);
+      // console.log("lenghthiest_header: ", lenghthiest_header);
 
-      const saved_record_count_response = await sql_request.query(
-        `SELECT COUNT(*) as totalCount FROM ${table_name};`
-      );
+      let is_first_time = false;
+      try {
+        const saved_record_count_response = await sql_request.query(
+          `SELECT COUNT(*) as totalCount FROM ${table_name};`
+        );
 
-      const saved_record_count =
-        saved_record_count_response.recordset[0]["totalCount"];
+        saved_record_count =
+          saved_record_count_response.recordset[0]["totalCount"];
+
+        is_first_time = !saved_record_count ? true : false;
+      } catch (err) {
+        is_first_time = true;
+      }
 
       if (
-        !saved_record_count &&
+        is_first_time &&
         (insertion_mode == "FLASHING" || insertion_mode == "UPADTE-FLASHING")
       ) {
         // first time
