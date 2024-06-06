@@ -395,22 +395,22 @@ async function start() {
               ));
           } while (!fetching_data_status);
         } else {
-          // column = "WHENMODIFIED"
-          // do {
-          //     ({ fetching_data_status, data_pool, result_id, _numRemaining } =
-          //         await query(
-          //             sql_request,
-          //             api_keyword,
-          //             api_name,
-          //             api_category,
-          //             filtering_condition,
-          //             data_pool,
-          //             result_id,
-          //             _numRemaining,
-          //             "UPDATING",
-          //             column,
-          //         ));
-          // } while (!fetching_data_status);
+          column = "WHENMODIFIED";
+          do {
+            ({ fetching_data_status, data_pool, result_id, _numRemaining } =
+              await query(
+                sql_request,
+                api_keyword,
+                api_name,
+                api_category,
+                filtering_condition,
+                data_pool,
+                result_id,
+                _numRemaining,
+                "UPDATING",
+                column
+              ));
+          } while (!fetching_data_status);
         }
       })
     );
