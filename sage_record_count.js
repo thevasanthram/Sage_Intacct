@@ -45,7 +45,7 @@ async function sage_intacct_record_count() {
 
     console.log(`${main_db}: `, main_db_table_list.length);
 
-    const refresh_db_table_response = await sage_intacct_client.query(
+    const refresh_db_table_response = await sage_auto_refresh_client.query(
       "SELECT t.name AS TableName,SUM(p.rows) AS RecordCount FROM sys.tables AS t INNER JOIN sys.partitions AS p ON t.object_id = p.object_id WHERE t.is_ms_shipped = 0 AND p.index_id IN (0,1) GROUP BY t.name ORDER BY RecordCount DESC;"
     );
     let refresh_db_table_list = refresh_db_table_response.recordset;
@@ -66,7 +66,7 @@ async function sage_intacct_record_count() {
         "\n";
     });
 
-    csv_content = csv_content + "\n" + main_db + "\n";
+    csv_content = csv_content + "\n" + refresh_db + "\n";
 
     refresh_db_table_list.map((table) => {
       csv_content =
