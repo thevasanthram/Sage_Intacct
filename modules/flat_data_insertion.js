@@ -46,6 +46,11 @@ async function flat_data_insertion(
       })
     );
 
+    if (table_name == "Project_and_Resource_Management_Projects") {
+      console.log("columns: ", table.columns);
+      console.log("rows: ", table.rows[0]);
+    }
+
     console.log(`${table_name}: `, data_pool.length);
 
     // Bulk insert
