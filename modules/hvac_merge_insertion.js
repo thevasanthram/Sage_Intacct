@@ -1,6 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const mssql = require("mssql");
+const extractMatchingValues = require("./extract_matching_values");
 
 async function hvac_merge_insertion(
   sql_pool,
@@ -11,10 +12,60 @@ async function hvac_merge_insertion(
   let status = "failure";
   // Generate a temporary table name
   const tempTableName = `Temp_${table_name}_${Date.now()}`;
+
   try {
-    // Create a table object with create option set to false
+    // Create a table object with create option set to true
     const table = new mssql.Table(tempTableName);
     table.create = true; // Create the table if it doesn't exist
+
+    // Define the columns based on the header_data
+    Object.keys(header_data).map((column) => {
+      table.columns.add(column.replace(/\./g, "_"), mssql.NVarChar(mssql.MAX));
+    });
+
+    // console.log("header_data: ", header_data);
+
+    // Add the data to the table
+    data_pool.map((currentObj) => {
+      const revised_record = extractMatchingValues(header_data, currentObj);
+
+      table.rows.add(
+        ...Object.values(revised_record).map((value) => {
+          if (typeof value == "string") {
+            return value.includes(`'`)
+              ? `${value.replace(/'/g, `''`)}`
+              : `${value}`;
+          } else {
+            return value;
+          }
+        })
+      );
+    });
+
+    // Bulk insert into the temporary table
+    await sql_pool.bulk(table);
+
+    // Check for new columns and alter the target table if necessary
+    const targetColumnsResult = await sql_pool.query(
+      `SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '${table_name}'`
+    );
+
+    const targetColumns = targetColumnsResult.recordset.map(
+      (row) => row.COLUMN_NAME
+    );
+
+    const newColumns = header_data.filter(
+      (column) => !targetColumns.includes(column.replace(/\./g, "_"))
+    );
+
+    for (const column of newColumns) {
+      const alterTableQuery = `ALTER TABLE ${table_name} ADD [${column.replace(
+        /\./g,
+        "_"
+      )}] NVARCHAR(MAX) NULL`;
+      console.log(`Altering table to add new column: ${column}`);
+      await sql_pool.query(alterTableQuery);
+    }
 
     // Update query
     const updation_query = header_data
@@ -27,35 +78,7 @@ async function hvac_merge_insertion(
       )
       .join(",\n");
 
-    // Define the columns based on the header_data
-    header_data.map((column) => {
-      table.columns.add(column.replace(/\./g, "_"), mssql.NVarChar(mssql.MAX));
-    });
-
-    // Add the data to the table
-    await Promise.all(
-      data_pool.map(async (currentObj, index) => {
-        table.rows.add(
-          ...Object.values(currentObj).map((value) => {
-            if (typeof value == "string") {
-              return value.includes(`'`)
-                ? `${value.replace(/'/g, `''`)}`
-                : `${value}`;
-            } else {
-              return value;
-            }
-          })
-        );
-      })
-    );
-
-    // console.log("started to enter db");
-
-    // Bulk insert into the temporary table
-    await sql_pool.bulk(table);
-
     // Use MERGE to update or insert into the target table
-    // Example of how to use it in the MERGE statement
     const mergeQuery = `
         MERGE INTO ${table_name} AS Target
         USING ${tempTableName} AS Source
@@ -74,8 +97,6 @@ async function hvac_merge_insertion(
         );
     `;
 
-    // console.log("mergeQuery: ", mergeQuery);
-
     // Execute the MERGE query
     const mergeResult = await sql_pool.query(mergeQuery);
 
@@ -89,12 +110,17 @@ async function hvac_merge_insertion(
 
     status = "success";
   } catch (err) {
-    console.error(table_name, "Bulk insert error: trying again..", err);
+    console.error(`${table_name} Bulk insert error:`, err);
     status = "failure";
 
-    await sql_pool.query(`DROP TABLE ${tempTableName}`);
-
-    // await sql_pool;
+    try {
+      await sql_pool.query(`DROP TABLE ${tempTableName}`);
+    } catch (dropError) {
+      console.error(
+        `Failed to drop temporary table ${tempTableName}:`,
+        dropError
+      );
+    }
   }
 
   return status;

@@ -44,7 +44,7 @@ const api_collection = {
   //   "User Restrictions": "USERRESTRICTION",
   //   "User Date and Time Formatting Preferences": "RECORDNO",
   // },
-  "General Ledger": {
+  // "General Ledger": {
     //   "Account Allocation Groups": "GLACCTALLOCATIONGRP",
     //   "Account Allocation": "GLACCTALLOCATION",
     //   "Account Allocation Run": "GLACCTALLOCATIONRUN",
@@ -56,7 +56,7 @@ const api_collection = {
     //   "Entity Level Account Titles": "ACCTTITLEBYLOC",
     //   Budgets: "GLBUDGETHEADER",
     //   "Budget Details": "GLBUDGETITEM",
-    "General Ledger Details": "GLDETAIL",
+    // "General Ledger Details": "GLDETAIL",
     //   "Journal Entries": "GLBATCH",
     //   "Journal Entry Lines": "GLENTRY",
     //   "Recurring Account Allocations": "RECURGLACCTALLOCATION",
@@ -67,7 +67,7 @@ const api_collection = {
     //   "Transaction Allocations": "ALLOCATION",
     //   "Transaction Allocation Lines": "ALLOCATIONENTRY",
     //   "Trial Balances": "default",
-  },
+  // },
   // "Cash Management": {
   //   "ACH Bank Configurations": "ACHBANK",
   //   "Bank Feeds": "BANKACCTTXNFEED",

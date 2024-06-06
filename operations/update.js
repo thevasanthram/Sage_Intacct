@@ -1,6 +1,7 @@
 async function query() {
   const bootstrap = require("./../bootstrap");
   const IA = require("@intacct/intacct-sdk");
+  const fs = require("fs");
 
   let data_pool = [];
 
@@ -8,26 +9,27 @@ async function query() {
     const client = bootstrap.client();
 
     let query = new IA.Functions.Common.ReadByQuery();
-    query.objectName = "GLDETAIL";
+    query.objectName = "PROJECT";
 
     // GreaterThanOrEqualTo condition
-    let greaterThanOrEqualTo =
-      new IA.Functions.Common.Query.Comparison.GreaterThanOrEqualTo.GreaterThanOrEqualToDateTime();
-    greaterThanOrEqualTo.field = "WHENMODIFIED";
-    greaterThanOrEqualTo.value = new Date("2024-06-04");
+    // let greaterThanOrEqualTo =
+    //   new IA.Functions.Common.Query.Comparison.GreaterThanOrEqualTo.GreaterThanOrEqualToDateTime();
+    // greaterThanOrEqualTo.field = "WHENMODIFIED";
+    // greaterThanOrEqualTo.value = new Date("2024-06-04");
 
     // LessThan condition
     let lessThan =
       new IA.Functions.Common.Query.Comparison.LessThan.LessThanDateTime();
     lessThan.field = "WHENMODIFIED";
-    lessThan.value = new Date("2024-06-05");
+    lessThan.value = new Date("2024-06-06");
 
     // Combine conditions with logical AND
-    let andCondition = new IA.Functions.Common.Query.Logical.AndCondition();
-    andCondition.conditions = [greaterThanOrEqualTo, lessThan];
+    // let andCondition = new IA.Functions.Common.Query.Logical.AndCondition();
+    // andCondition.conditions = [greaterThanOrEqualTo, lessThan];
 
     // Set the combined condition as the query
-    query.query = greaterThanOrEqualTo;
+    // query.query = greaterThanOrEqualTo;
+    query.query = lessThan;
 
     const response = await client.execute(query);
     const result = response.getResult();
@@ -73,6 +75,10 @@ async function query() {
     }
 
     console.log("data_pool: ", data_pool.length);
+
+    fs.writeFile("./projects.js", JSON.stringify(data_pool), () =>
+      console.log("data written")
+    );
 
     // Process retrieved data further as needed
   } catch (ex) {

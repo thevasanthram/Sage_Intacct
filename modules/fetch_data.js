@@ -3,6 +3,7 @@ const IA = require("@intacct/intacct-sdk");
 const create_flat_table = require("./create_flat_table");
 const flat_data_insertion = require("./flat_data_insertion");
 const hvac_merge_insertion = require("./hvac_merge_insertion");
+const find_lenghthiest_header = require("./find_lengthiest_header");
 
 async function query(
   sql_request,
@@ -130,12 +131,18 @@ async function query(
         // write into db
         let data_insertion_status = false;
 
-        if (insertion_mode == "FLASHING" || "UPADTE-FLASHING") {
+        const lenghthiest_header = await find_lenghthiest_header(data_pool);
+        console.log("lenghthiest_header: ", lenghthiest_header);
+
+        if (
+          insertion_mode == "FLASHING" ||
+          insertion_mode == "UPADTE-FLASHING"
+        ) {
           do {
             data_insertion_status = await flat_data_insertion(
               sql_request,
               data_pool,
-              header_data,
+              lenghthiest_header,
               table_name,
               insertion_mode
             );
@@ -145,7 +152,7 @@ async function query(
             data_insertion_status = await hvac_merge_insertion(
               sql_request,
               data_pool,
-              header_data,
+              lenghthiest_header,
               table_name
             );
           } while (!data_insertion_status);
@@ -158,25 +165,30 @@ async function query(
 
     // console.log("fetching done");
 
+    console.log("insertion_mode: ", insertion_mode);
+
     if (data_pool.length > 0) {
       let data_insertion_status = false;
-      if (insertion_mode == "FLASHING" || "UPADTE-FLASHING") {
+
+      const lenghthiest_header = await find_lenghthiest_header(data_pool);
+      console.log("lenghthiest_header: ", lenghthiest_header);
+
+      if (insertion_mode == "FLASHING" || insertion_mode == "UPADTE-FLASHING") {
         do {
           data_insertion_status = await flat_data_insertion(
             sql_request,
             data_pool,
-            header_data,
+            lenghthiest_header,
             table_name,
             insertion_mode
           );
         } while (!data_insertion_status);
       } else {
-        // console.log("enteirng to hvac_merge_insertion");
         do {
           data_insertion_status = await hvac_merge_insertion(
             sql_request,
             data_pool,
-            header_data,
+            lenghthiest_header,
             table_name
           );
         } while (!data_insertion_status);

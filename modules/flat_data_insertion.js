@@ -1,6 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const mssql = require("mssql");
+const extractMatchingValues = require("./extract_matching_values");
 
 async function flat_data_insertion(
   sql_request,
@@ -24,7 +25,7 @@ async function flat_data_insertion(
     // console.log("table_name: ", table_name);
     // console.log("header_data: ", header_data);
 
-    header_data.map((column) => {
+    Object.keys(header_data).map((column) => {
       table.columns.add(column.replace(/\./g, "_"), mssql.NVarChar(mssql.MAX));
     });
 
@@ -32,8 +33,10 @@ async function flat_data_insertion(
 
     await Promise.all(
       data_pool.map(async (currentObj, index) => {
+        const revised_record = extractMatchingValues(header_data, currentObj);
+
         table.rows.add(
-          ...Object.values(currentObj).map((value) => {
+          ...Object.values(revised_record).map((value) => {
             if (typeof value == "string") {
               return value.includes(`'`)
                 ? `${String(value.replace(/'/g, `''`))}`
@@ -45,11 +48,6 @@ async function flat_data_insertion(
         ); // Spread the elements of the row array as arguments
       })
     );
-
-    if (table_name == "Project_and_Resource_Management_Projects") {
-      console.log("columns: ", table.columns);
-      console.log("rows: ", table.rows[0]);
-    }
 
     console.log(`${table_name}: `, data_pool.length);
 
