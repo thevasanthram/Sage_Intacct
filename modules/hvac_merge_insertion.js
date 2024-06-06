@@ -54,7 +54,7 @@ async function hvac_merge_insertion(
       (row) => row.COLUMN_NAME
     );
 
-    const newColumns = header_data.filter(
+    const newColumns = Object.keys(header_data).filter(
       (column) => !targetColumns.includes(column.replace(/\./g, "_"))
     );
 
@@ -68,7 +68,7 @@ async function hvac_merge_insertion(
     }
 
     // Update query
-    const updation_query = header_data
+    const updation_query = Object.keys(header_data)
       .map(
         (column) =>
           `Target.[${column.replace(/\./g, "_")}] = Source.[${column.replace(
@@ -87,11 +87,11 @@ async function hvac_merge_insertion(
         UPDATE SET
             ${updation_query}
         WHEN NOT MATCHED THEN
-        INSERT (${header_data
+        INSERT (${Object.keys(header_data)
           .map((column) => `[${column.replace(/\./g, "_")}]`)
           .join(", ")}
         )
-        VALUES (${header_data
+        VALUES (${Object.keys(header_data)
           .map((column) => `[Source].[${column.replace(/\./g, "_")}]`)
           .join(", ")}
         );

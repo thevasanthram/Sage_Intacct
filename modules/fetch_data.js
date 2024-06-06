@@ -134,10 +134,18 @@ async function query(
         const lenghthiest_header = await find_lenghthiest_header(data_pool);
         console.log("lenghthiest_header: ", lenghthiest_header);
 
+        const saved_record_count_response = await sql_request.query(
+          `SELECT COUNT(*) as totalCount FROM ${table_name};`
+        );
+
+        const saved_record_count =
+          saved_record_count_response.recordset[0]["totalCount"];
+
         if (
-          insertion_mode == "FLASHING" ||
-          insertion_mode == "UPADTE-FLASHING"
+          !saved_record_count &&
+          (insertion_mode == "FLASHING" || insertion_mode == "UPADTE-FLASHING")
         ) {
+          // first time
           do {
             data_insertion_status = await flat_data_insertion(
               sql_request,
@@ -158,6 +166,30 @@ async function query(
           } while (!data_insertion_status);
         }
 
+        // if (
+        //   insertion_mode == "FLASHING" ||
+        //   insertion_mode == "UPADTE-FLASHING"
+        // ) {
+        //   do {
+        //     data_insertion_status = await flat_data_insertion(
+        //       sql_request,
+        //       data_pool,
+        //       lenghthiest_header,
+        //       table_name,
+        //       insertion_mode
+        //     );
+        //   } while (!data_insertion_status);
+        // } else {
+        //   do {
+        //     data_insertion_status = await hvac_merge_insertion(
+        //       sql_request,
+        //       data_pool,
+        //       lenghthiest_header,
+        //       table_name
+        //     );
+        //   } while (!data_insertion_status);
+        // }
+
         // free data_pool
         data_pool = [];
       }
@@ -173,7 +205,18 @@ async function query(
       const lenghthiest_header = await find_lenghthiest_header(data_pool);
       console.log("lenghthiest_header: ", lenghthiest_header);
 
-      if (insertion_mode == "FLASHING" || insertion_mode == "UPADTE-FLASHING") {
+      const saved_record_count_response = await sql_request.query(
+        `SELECT COUNT(*) as totalCount FROM ${table_name};`
+      );
+
+      const saved_record_count =
+        saved_record_count_response.recordset[0]["totalCount"];
+
+      if (
+        !saved_record_count &&
+        (insertion_mode == "FLASHING" || insertion_mode == "UPADTE-FLASHING")
+      ) {
+        // first time
         do {
           data_insertion_status = await flat_data_insertion(
             sql_request,
@@ -193,6 +236,27 @@ async function query(
           );
         } while (!data_insertion_status);
       }
+
+      // if (insertion_mode == "FLASHING" || insertion_mode == "UPADTE-FLASHING") {
+      //   do {
+      //     data_insertion_status = await flat_data_insertion(
+      //       sql_request,
+      //       data_pool,
+      //       lenghthiest_header,
+      //       table_name,
+      //       insertion_mode
+      //     );
+      //   } while (!data_insertion_status);
+      // } else {
+      //   do {
+      //     data_insertion_status = await hvac_merge_insertion(
+      //       sql_request,
+      //       data_pool,
+      //       lenghthiest_header,
+      //       table_name
+      //     );
+      //   } while (!data_insertion_status);
+      // }
 
       data_pool = [];
     }

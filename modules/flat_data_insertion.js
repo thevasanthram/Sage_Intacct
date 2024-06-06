@@ -13,7 +13,7 @@ async function flat_data_insertion(
   let status = false;
   try {
     if (insertion_mode == "UPADTE-FLASHING") {
-      const delete_table_records = `DELETE FROM ${table_name}`;
+      const delete_table_records = `DROP TABLE ${table_name}`;
       await sql_request.query(delete_table_records);
     }
 
