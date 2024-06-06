@@ -8,6 +8,7 @@ async function create_sql_connection() {
     password: "PiTestBi01",
     server: "pinnaclemep.database.windows.net",
     database: "bi_play_ground_update",
+    // database: "sage_intacct",
     options: {
       encrypt: true, // Use this option for SSL encryption
       requestTimeout: 48 * 60 * 60 * 1000, // 60 seconds (adjust as needed)
