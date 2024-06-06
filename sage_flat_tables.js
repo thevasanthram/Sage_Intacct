@@ -341,7 +341,7 @@ async function start() {
     sql_request = await create_sql_connection();
   } while (!sql_request);
 
-  // await flush_database(sql_request);
+  await flush_database(sql_request);
 
   const data_hub = {};
 
@@ -380,7 +380,8 @@ async function start() {
               data_pool,
               result_id,
               _numRemaining,
-              "FLASHING"
+              "FLASHING",
+              "WHENCREATED"
             ));
         } while (!fetching_data_status);
       })

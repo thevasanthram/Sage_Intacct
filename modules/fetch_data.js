@@ -13,7 +13,8 @@ async function query(
   data_pool,
   result_id,
   _numRemaining,
-  insertion_mode
+  insertion_mode,
+  column
 ) {
   // console.log("api_keyword: ", api_keyword);
   // console.log("api_name: ", api_name);
@@ -40,7 +41,7 @@ async function query(
         // GreaterThanOrEqualTo condition
         greaterThanOrEqualTo =
           new IA.Functions.Common.Query.Comparison.GreaterThanOrEqualTo.GreaterThanOrEqualToDateTime();
-        greaterThanOrEqualTo.field = filtering_condition["column"];
+        greaterThanOrEqualTo.field = column;
         greaterThanOrEqualTo.value = new Date(
           filtering_condition["greaterThanOrEqualTo"]
         );
@@ -52,7 +53,7 @@ async function query(
         // LessThan condition
         lessThan =
           new IA.Functions.Common.Query.Comparison.LessThan.LessThanDateTime();
-        lessThan.field = filtering_condition["column"];
+        lessThan.field = column;
         lessThan.value = new Date(filtering_condition["lessThan"]);
 
         query.query = lessThan;
@@ -129,13 +130,14 @@ async function query(
         // write into db
         let data_insertion_status = false;
 
-        if (insertion_mode == "FLASHING") {
+        if (insertion_mode == "FLASHING" || "UPADTE-FLASHING") {
           do {
             data_insertion_status = await flat_data_insertion(
               sql_request,
               data_pool,
               header_data,
-              table_name
+              table_name,
+              insertion_mode
             );
           } while (!data_insertion_status);
         } else {
@@ -158,13 +160,14 @@ async function query(
 
     if (data_pool.length > 0) {
       let data_insertion_status = false;
-      if (insertion_mode == "FLASHING") {
+      if (insertion_mode == "FLASHING" || "UPADTE-FLASHING") {
         do {
           data_insertion_status = await flat_data_insertion(
             sql_request,
             data_pool,
             header_data,
-            table_name
+            table_name,
+            insertion_mode
           );
         } while (!data_insertion_status);
       } else {

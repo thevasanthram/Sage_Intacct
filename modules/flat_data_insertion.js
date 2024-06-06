@@ -6,12 +6,15 @@ async function flat_data_insertion(
   sql_request,
   data_pool,
   header_data,
-  table_name
+  table_name,
+  insertion_mode
 ) {
   let status = false;
   try {
-    // const delete_table_records = `DELETE FROM ${table_name}`;
-    // await sql_request.query(delete_table_records);
+    if (insertion_mode == "UPADTE-FLASHING") {
+      const delete_table_records = `DELETE FROM ${table_name}`;
+      await sql_request.query(delete_table_records);
+    }
 
     // Create a table object with create option set to false
     const table = new mssql.Table(table_name);

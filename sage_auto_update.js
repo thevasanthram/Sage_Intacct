@@ -42,14 +42,14 @@ const api_collection = {
     "Account Balances": "default",
     "Account Group Purposes": "GLACCTGRPPURPOSE",
     "Account Groups": "GLACCTGRP",
-    // "Account Group Hierarchy": "GLACCTGRPHIERARCHY",
+    "Account Group Hierarchy": "GLACCTGRPHIERARCHY",
     Accounts: "GLACCOUNT",
     "Entity Level Account Titles": "ACCTTITLEBYLOC",
     Budgets: "GLBUDGETHEADER",
-    // "Budget Details": "GLBUDGETITEM",
+    "Budget Details": "GLBUDGETITEM",
     "General Ledger Details": "GLDETAIL",
-    // "Journal Entries": "GLBATCH",
-    // "Journal Entry Lines": "GLENTRY",
+    // "Journal Entries": "GLBATCH", ============
+    // "Journal Entry Lines": "GLENTRY", ========
     "Recurring Account Allocations": "RECURGLACCTALLOCATION",
     "Reporting Periods": "REPORTINGPERIOD",
     "Statistical Accounts": "STATACCOUNT",
@@ -88,7 +88,7 @@ const api_collection = {
     "AP Payments": "APPYMT",
     "AP Payment Details": "APPYMTDETAIL",
     "AP Payment Requests": "APPAYMENTREQUEST",
-    // "AP Summaries": "APBILLBATCH",
+    "AP Summaries": "APBILLBATCH",
     "AP Adjustment Summaries": "default",
     "AP Terms": "APTERM",
     Bills: "APBILL",
@@ -111,7 +111,7 @@ const api_collection = {
     "AR Advances": "ARADVANCE",
     "AR Aging": "default",
     "AR Payments": "ARPYMT",
-    // "AR Summaries": "ARINVOICEBATCH",
+    "AR Summaries": "ARINVOICEBATCH",
     "AR Adjustment Summaries": "default",
     "AR Terms": "ARTERM",
     "Customer Bank Accounts": "default",
@@ -164,7 +164,7 @@ const api_collection = {
   },
   "Inventory Control": {
     Aisles: "AISLE",
-    // "Available Inventory": "AVAILABLEINVENTORY",
+    "Available Inventory": "AVAILABLEINVENTORY",
     "Bin Faces": "BINFACE",
     "Bin Sizes": "BINSIZE",
     Bins: "BIN",
@@ -172,7 +172,7 @@ const api_collection = {
     "Inventory Cycle Counts": "ICCYCLECOUNT",
     "Inventory Cycle Count Lines": "ICCYCLECOUNTENTRY",
     "Inventory Control Price Lists": "INVPRICELIST",
-    // "Inventory Total Details": "INVENTORYTOTALDETAIL",
+    "Inventory Total Details": "INVENTORYTOTALDETAIL",
     "Inventory Transaction Definitions": "INVDOCUMENTPARAMS",
     "Inventory Transactions": "INVDOCUMENT",
     "Inventory Transaction Lines": "INVDOCUMENTENTRY",
@@ -184,7 +184,7 @@ const api_collection = {
     " Item GL Groups": "ITEMGLGROUP",
     "Item Groups": "ITEMGROUP",
     "Item Tax Groups": "ITEMTAXGROUP",
-    // "Item Warehouse Details": "ITEMWAREHOUSEINFO",
+    "Item Warehouse Details": "ITEMWAREHOUSEINFO",
     Items: "ITEM",
     " Product Lines": "PRODUCTLINE",
     Rows: "ICROW",
@@ -299,7 +299,7 @@ const api_collection = {
   "Platform Services": {
     Applications: "PTAPPLICATION",
     Dimensions: "noObject",
-    // Objects: "ACTIVITYLOG",
+    // Objects: "ACTIVITYLOG", =============
     Records: "noObject2",
     Views: "noObject3",
   },
@@ -322,7 +322,6 @@ let yesterday = new Date("2024-06-01T00:00:00.00Z");
 yesterday.setDate(yesterday.getDate() - 1); // Yesterday at 00:00 IST
 
 const filtering_condition = {
-  column: "WHENMODIFIED",
   greaterThanOrEqualTo: yesterday.toISOString(), // "2024-02-12T00:00:00.00Z"
   lessThan: today.toISOString(), // "2024-02-12T00:00:00.00Z"
 };
@@ -360,20 +359,59 @@ async function start() {
         const api_keyword = api_category_list[api_name];
 
         let fetching_data_status = false;
-        do {
-          ({ fetching_data_status, data_pool, result_id, _numRemaining } =
-            await query(
-              sql_request,
-              api_keyword,
-              api_name,
-              api_category,
-              filtering_condition,
-              data_pool,
-              result_id,
-              _numRemaining,
-              "UPDATING"
-            ));
-        } while (!fetching_data_status);
+        let column;
+
+        if (
+          (api_category == "General Ledger" &&
+            api_name == "Account Group Hierarchy") ||
+          (api_category == "General Ledger" && api_name == "Budget Details") ||
+          (api_category == "Accounts Payable" && api_name == "AP Summaries") ||
+          (api_category == "Accounts Receivable" &&
+            api_name == "AR Summaries") ||
+          (api_category == "Inventory Control" &&
+            api_name == "Available Inventory") ||
+          (api_category == "Inventory Control" &&
+            api_name == "Inventory Total Details") ||
+          (api_category == "Inventory Control" &&
+            api_name == "Item Warehouse Details")
+        ) {
+          column = "WHENCREATED";
+          let new_filtering_condition = {
+            lessThan: today.toISOString(),
+          };
+          do {
+            ({ fetching_data_status, data_pool, result_id, _numRemaining } =
+              await query(
+                sql_request,
+                api_keyword,
+                api_name,
+                api_category,
+                new_filtering_condition,
+                data_pool,
+                result_id,
+                _numRemaining,
+                "UPADTE-FLASHING",
+                column
+              ));
+          } while (!fetching_data_status);
+        } else {
+          // column = "WHENMODIFIED"
+          // do {
+          //     ({ fetching_data_status, data_pool, result_id, _numRemaining } =
+          //         await query(
+          //             sql_request,
+          //             api_keyword,
+          //             api_name,
+          //             api_category,
+          //             filtering_condition,
+          //             data_pool,
+          //             result_id,
+          //             _numRemaining,
+          //             "UPDATING",
+          //             column,
+          //         ));
+          // } while (!fetching_data_status);
+        }
       })
     );
   }
