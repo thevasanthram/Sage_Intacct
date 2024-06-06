@@ -379,37 +379,54 @@ async function start() {
           let new_filtering_condition = {
             lessThan: today.toISOString(),
           };
+
+          let is_first_time = true;
+
           do {
-            ({ fetching_data_status, data_pool, result_id, _numRemaining } =
-              await query(
-                sql_request,
-                api_keyword,
-                api_name,
-                api_category,
-                new_filtering_condition,
-                data_pool,
-                result_id,
-                _numRemaining,
-                "UPADTE-FLASHING",
-                column
-              ));
+            ({
+              fetching_data_status,
+              data_pool,
+              result_id,
+              _numRemaining,
+              is_first_time,
+            } = await query(
+              sql_request,
+              api_keyword,
+              api_name,
+              api_category,
+              new_filtering_condition,
+              data_pool,
+              result_id,
+              _numRemaining,
+              "UPADTE-FLASHING",
+              column,
+              is_first_time
+            ));
           } while (!fetching_data_status);
         } else {
           column = "WHENMODIFIED";
+          let is_first_time = false;
+
           do {
-            ({ fetching_data_status, data_pool, result_id, _numRemaining } =
-              await query(
-                sql_request,
-                api_keyword,
-                api_name,
-                api_category,
-                filtering_condition,
-                data_pool,
-                result_id,
-                _numRemaining,
-                "UPDATING",
-                column
-              ));
+            ({
+              fetching_data_status,
+              data_pool,
+              result_id,
+              _numRemaining,
+              is_first_time,
+            } = await query(
+              sql_request,
+              api_keyword,
+              api_name,
+              api_category,
+              filtering_condition,
+              data_pool,
+              result_id,
+              _numRemaining,
+              "UPDATING",
+              column,
+              is_first_time
+            ));
           } while (!fetching_data_status);
         }
       })

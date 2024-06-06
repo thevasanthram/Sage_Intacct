@@ -15,7 +15,8 @@ async function query(
   result_id,
   _numRemaining,
   insertion_mode,
-  column
+  column,
+  is_first_time
 ) {
   // console.log("api_keyword: ", api_keyword);
   // console.log("api_name: ", api_name);
@@ -134,20 +135,6 @@ async function query(
         const lenghthiest_header = await find_lenghthiest_header(data_pool);
         // console.log("lenghthiest_header: ", lenghthiest_header);
 
-        let is_first_time = false;
-        try {
-          const saved_record_count_response = await sql_request.query(
-            `SELECT COUNT(*) as totalCount FROM ${table_name};`
-          );
-
-          saved_record_count =
-            saved_record_count_response.recordset[0]["totalCount"];
-
-          is_first_time = !saved_record_count ? true : false;
-        } catch (err) {
-          is_first_time = true;
-        }
-
         if (
           is_first_time &&
           (insertion_mode == "FLASHING" || insertion_mode == "UPADTE-FLASHING")
@@ -162,6 +149,8 @@ async function query(
               insertion_mode
             );
           } while (!data_insertion_status);
+
+          is_first_time = false;
         } else {
           do {
             data_insertion_status = await hvac_merge_insertion(
@@ -172,30 +161,6 @@ async function query(
             );
           } while (!data_insertion_status);
         }
-
-        // if (
-        //   insertion_mode == "FLASHING" ||
-        //   insertion_mode == "UPADTE-FLASHING"
-        // ) {
-        //   do {
-        //     data_insertion_status = await flat_data_insertion(
-        //       sql_request,
-        //       data_pool,
-        //       lenghthiest_header,
-        //       table_name,
-        //       insertion_mode
-        //     );
-        //   } while (!data_insertion_status);
-        // } else {
-        //   do {
-        //     data_insertion_status = await hvac_merge_insertion(
-        //       sql_request,
-        //       data_pool,
-        //       lenghthiest_header,
-        //       table_name
-        //     );
-        //   } while (!data_insertion_status);
-        // }
 
         // free data_pool
         data_pool = [];
@@ -212,20 +177,6 @@ async function query(
       const lenghthiest_header = await find_lenghthiest_header(data_pool);
       // console.log("lenghthiest_header: ", lenghthiest_header);
 
-      let is_first_time = false;
-      try {
-        const saved_record_count_response = await sql_request.query(
-          `SELECT COUNT(*) as totalCount FROM ${table_name};`
-        );
-
-        saved_record_count =
-          saved_record_count_response.recordset[0]["totalCount"];
-
-        is_first_time = !saved_record_count ? true : false;
-      } catch (err) {
-        is_first_time = true;
-      }
-
       if (
         is_first_time &&
         (insertion_mode == "FLASHING" || insertion_mode == "UPADTE-FLASHING")
@@ -240,6 +191,8 @@ async function query(
             insertion_mode
           );
         } while (!data_insertion_status);
+
+        is_first_time = false;
       } else {
         do {
           data_insertion_status = await hvac_merge_insertion(
@@ -250,27 +203,6 @@ async function query(
           );
         } while (!data_insertion_status);
       }
-
-      // if (insertion_mode == "FLASHING" || insertion_mode == "UPADTE-FLASHING") {
-      //   do {
-      //     data_insertion_status = await flat_data_insertion(
-      //       sql_request,
-      //       data_pool,
-      //       lenghthiest_header,
-      //       table_name,
-      //       insertion_mode
-      //     );
-      //   } while (!data_insertion_status);
-      // } else {
-      //   do {
-      //     data_insertion_status = await hvac_merge_insertion(
-      //       sql_request,
-      //       data_pool,
-      //       lenghthiest_header,
-      //       table_name
-      //     );
-      //   } while (!data_insertion_status);
-      // }
 
       data_pool = [];
     }
@@ -349,6 +281,7 @@ async function query(
     data_pool,
     result_id,
     _numRemaining,
+    is_first_time,
   };
 }
 

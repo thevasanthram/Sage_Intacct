@@ -369,20 +369,27 @@ async function start() {
         const api_keyword = api_category_list[api_name];
 
         let fetching_data_status = false;
+        let is_first_time = true;
         do {
-          ({ fetching_data_status, data_pool, result_id, _numRemaining } =
-            await query(
-              sql_request,
-              api_keyword,
-              api_name,
-              api_category,
-              filtering_condition,
-              data_pool,
-              result_id,
-              _numRemaining,
-              "FLASHING",
-              "WHENCREATED"
-            ));
+          ({
+            fetching_data_status,
+            data_pool,
+            result_id,
+            _numRemaining,
+            is_first_time,
+          } = await query(
+            sql_request,
+            api_keyword,
+            api_name,
+            api_category,
+            filtering_condition,
+            data_pool,
+            result_id,
+            _numRemaining,
+            "FLASHING",
+            "WHENCREATED",
+            is_first_time
+          ));
         } while (!fetching_data_status);
       })
     );
