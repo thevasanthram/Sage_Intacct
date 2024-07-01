@@ -4,6 +4,9 @@ const create_flat_table = require("./create_flat_table");
 const flat_data_insertion = require("./flat_data_insertion");
 const hvac_merge_insertion = require("./hvac_merge_insertion");
 const find_lenghthiest_header = require("./find_lengthiest_header");
+const {
+  ConsolidationCreate,
+} = require("@intacct/intacct-sdk/dist/Functions/GlobalConsolidations");
 
 async function query(
   sql_request,
@@ -259,9 +262,10 @@ async function query(
     } else {
       if (
         ex.message.includes(
-          "FetchError: network timeout at: https://api.intacct.com/ia/xml/xmlgw.phtml"
+          "network timeout at: https://api.intacct.com/ia/xml/xmlgw.phtml"
         )
       ) {
+        console.log("entering===");
         fetching_data_status = true;
       } else {
         fetching_data_status = false;
