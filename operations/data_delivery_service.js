@@ -10,14 +10,14 @@ async function query() {
     const client = bootstrap.client();
 
     let data_delivery_service =
-      new IA.Functions.DataDeliveryService.DdsObjectDdlGet();
+      new IA.Functions.DataDeliveryService.DdsJobCreate();
 
     // let data_delivery_service =
     //   new IA.Functions.DataDeliveryService.DdsObjectList();
 
     data_delivery_service.objectName = "CUSTOMER";
 
-    console.log("data_delivery_service: ", data_delivery_service);
+    // console.log("data_delivery_service: ", data_delivery_service);
 
     const response = await client.execute(data_delivery_service);
 
