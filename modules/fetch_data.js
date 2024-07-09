@@ -85,6 +85,8 @@ async function query(
       const result = response.getResult();
       let json_data = result.data;
 
+      console.log("_totalCount: ", _totalCount);
+
       // if no data, then return
       if (json_data.length < 0) {
         return;
