@@ -60,7 +60,8 @@ async function transporter() {
 
     error_status = "uploading data into database";
 
-    Object.keys(dataLake).map(async (tableName, index) => {
+    for (let i = 0; i < Object.keys(dataLake).length; i++) {
+      const tableName = Object.keys(dataLake)[i];
       const dataPool = dataLake[tableName];
 
       const headerData = dataPool[0];
@@ -74,7 +75,7 @@ async function transporter() {
           tableName
         );
       } while (!data_insertion_status);
-    });
+    }
   } catch (error) {
     console.log(`Error while ${error_status}: `, error);
   }
