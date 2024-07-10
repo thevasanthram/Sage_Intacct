@@ -32,7 +32,7 @@ async function transporter() {
     await Promise.all(
       csv_files.map(async (csvFileName) => {
         try {
-          const completePath = blobFilesFolderPath + "\\" + csvFileName;
+          const completePath = path.join(blobFilesFolderPath, csvFileName);
           const data = await readCSV(completePath);
 
           const tableName = csvFileName.split(".")[0];
