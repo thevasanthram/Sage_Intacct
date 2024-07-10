@@ -442,7 +442,7 @@ async function start() {
 }
 
 async function orchestrate() {
-  // Step 1: Call start_pipeline
+  // Step 1: Call start_pipeline //
   await start();
 
   console.log("filtering_condition: ", filtering_condition);
