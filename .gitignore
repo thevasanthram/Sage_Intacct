@@ -2,3 +2,4 @@ node_modules
 credentials.ini
 logs
 sage_record_count.csv
+blob_files

@@ -445,6 +445,8 @@ async function orchestrate() {
   // Step 1: Call start_pipeline
   await start();
 
+  console.log("filtering_condition: ", filtering_condition);
+
   do {
     // finding the next batch time
     filtering_condition["greaterThanOrEqualTo"] =
@@ -475,8 +477,8 @@ async function orchestrate() {
       console.log("next batch initiated");
 
       now.setUTCHours(7, 0, 0, 0);
+      filtering_condition["lessThan"] = now.toISOString();
 
-      filtering_condition["modifiedBefore"] = now.toISOString();
       console.log("filtering_condition: ", filtering_condition);
 
       // Step 1: Call start_pipeline

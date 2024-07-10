@@ -9,7 +9,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@azure/storage-blob": "^12.23.0",
     "@intacct/intacct-sdk": "^2.2.1",
+    "csv-parser": "^3.0.0",
     "moment": "^2.30.1",
     "mssql": "^10.0.2"
   }
