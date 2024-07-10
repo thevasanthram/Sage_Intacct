@@ -61,7 +61,6 @@ async function transporter() {
       } catch (err) {
         console.log(`Error while reading data from ${csvFileName}`, err);
       }
-      console.log(`files ${i + 1} to ${i + batchSize + 1} completed!`);
     }
   } catch (error) {
     console.log(`Error while ${error_status}: `, error);
