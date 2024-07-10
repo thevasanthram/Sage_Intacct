@@ -29,34 +29,39 @@ async function transporter() {
       `csv ${csv_files.length > 1 ? "files" : "file"} to be processed...`
     );
 
-    await Promise.all(
-      csv_files.map(async (csvFileName) => {
-        try {
-          const completePath = path.join(blobFilesFolderPath, csvFileName);
-          const data = await readCSV(completePath);
-
-          const tableName = csvFileName.split(".")[0];
-
-          if (!dataLake[tableName]) {
-            dataLake[tableName] = data;
-          } else {
-            dataLake[tableName] = [...dataLake[tableName], ...data];
-          }
-
-          console.log(`${csvFileName}: `, data.length);
-        } catch (err) {
-          console.log(`Error while reading data from ${csvFileName}`, err);
-        }
-      })
-    );
-
-    // console.log("dataLake: ", Object.keys(dataLake));
-
     // creating a client for azure sql database operations
     let sql_request = "";
     do {
       sql_request = await create_sql_connection();
     } while (!sql_request);
+
+    let batchSize = 10;
+    for (let i = 0; i < csv_files.length; i = i + batchSize) {
+      console.log(`processing files ${i + 1} to ${i + batchSize + 1}...`);
+      await Promise.all(
+        csv_files.slice(i, i + batchSize).map(async (csvFileName) => {
+          try {
+            const completePath = path.join(blobFilesFolderPath, csvFileName);
+            const data = await readCSV(completePath);
+
+            const tableName = csvFileName.split(".")[0];
+
+            if (!dataLake[tableName]) {
+              dataLake[tableName] = data;
+            } else {
+              dataLake[tableName] = [...dataLake[tableName], ...data];
+            }
+
+            console.log(`${csvFileName}: `, data.length);
+          } catch (err) {
+            console.log(`Error while reading data from ${csvFileName}`, err);
+          }
+        })
+      );
+      console.log(`files ${i + 1} to ${i + batchSize + 1} completed!`);
+    }
+
+    // console.log("dataLake: ", Object.keys(dataLake));
 
     error_status = "uploading data into database";
 
@@ -66,6 +71,7 @@ async function transporter() {
 
       const headerData = dataPool[0];
 
+      console.log(tableName + ":", dataPool.length);
       let data_insertion_status = false;
       do {
         data_insertion_status = await sage_data_insertion(

@@ -13,13 +13,8 @@ async function sage_data_insertion(
   const tempTableName = `Temp_${table_name}_${Date.now()}`;
 
   try {
-    // Check if the target table exists
-    const tableExistsQuery = `
-      SELECT 1 
-      FROM INFORMATION_SCHEMA.TABLES 
-      WHERE TABLE_NAME = '${table_name}'
-    `;
-    const tableExistsResult = await sql_pool.query(tableExistsQuery);
+    // Create a request object
+    const request = new mssql.Request(sql_pool);
 
     // Create a table object with create option set to true
     const table = new mssql.Table(tempTableName);
@@ -46,10 +41,18 @@ async function sage_data_insertion(
     });
 
     // Bulk insert into the temporary table
-    await sql_pool.bulk(table);
+    await request.bulk(table);
+
+    // Check if the target table exists
+    const tableExistsQuery = `
+      SELECT 1 
+      FROM INFORMATION_SCHEMA.TABLES 
+      WHERE TABLE_NAME = '${table_name}'
+    `;
+    const tableExistsResult = await sql_pool.query(tableExistsQuery);
 
     if (tableExistsResult.recordset.length === 0) {
-      // If the table does not exist, bulk insert into the target table
+      // If the table does not exist, create it and bulk insert
       console.log(
         `Table ${table_name} does not exist. Performing bulk insert.`
       );
@@ -70,7 +73,7 @@ async function sage_data_insertion(
       targetTable.rows = table.rows;
 
       // Bulk insert into the target table
-      await sql_pool.bulk(targetTable);
+      await request.bulk(targetTable);
     } else {
       // If the table exists, perform merge operation
       console.log(`Table ${table_name} exists. Performing merge operation.`);
