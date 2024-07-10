@@ -35,52 +35,33 @@ async function transporter() {
       sql_request = await create_sql_connection();
     } while (!sql_request);
 
-    let batchSize = 10;
-    for (let i = 0; i < csv_files.length; i = i + batchSize) {
-      console.log(`processing files ${i + 1} to ${i + batchSize + 1}...`);
-      await Promise.all(
-        csv_files.slice(i, i + batchSize).map(async (csvFileName) => {
-          try {
-            const completePath = path.join(blobFilesFolderPath, csvFileName);
-            const data = await readCSV(completePath);
+    for (let i = 0; i < csv_files.length; i++) {
+      console.log(`processing file: ${csv_files[i]}...`);
+      try {
+        const csvFileName = csv_files[i];
+        const completePath = path.join(blobFilesFolderPath, csvFileName);
+        const data = await readCSV(completePath);
 
-            const tableName = csvFileName.split(".")[0];
+        const tableName = csvFileName.split(".")[0];
 
-            if (!dataLake[tableName]) {
-              dataLake[tableName] = data;
-            } else {
-              dataLake[tableName] = [...dataLake[tableName], ...data];
-            }
+        console.log(`${csvFileName}: `, data.length);
 
-            console.log(`${csvFileName}: `, data.length);
-          } catch (err) {
-            console.log(`Error while reading data from ${csvFileName}`, err);
-          }
-        })
-      );
+        const headerData = data[0];
+
+        console.log(tableName + ":", data.length);
+        let data_insertion_status = false;
+        do {
+          data_insertion_status = await sage_data_insertion(
+            sql_request,
+            data,
+            headerData,
+            tableName
+          );
+        } while (!data_insertion_status);
+      } catch (err) {
+        console.log(`Error while reading data from ${csvFileName}`, err);
+      }
       console.log(`files ${i + 1} to ${i + batchSize + 1} completed!`);
-    }
-
-    // console.log("dataLake: ", Object.keys(dataLake));
-
-    error_status = "uploading data into database";
-
-    for (let i = 0; i < Object.keys(dataLake).length; i++) {
-      const tableName = Object.keys(dataLake)[i];
-      const dataPool = dataLake[tableName];
-
-      const headerData = dataPool[0];
-
-      console.log(tableName + ":", dataPool.length);
-      let data_insertion_status = false;
-      do {
-        data_insertion_status = await sage_data_insertion(
-          sql_request,
-          dataPool,
-          headerData,
-          tableName
-        );
-      } while (!data_insertion_status);
     }
   } catch (error) {
     console.log(`Error while ${error_status}: `, error);
