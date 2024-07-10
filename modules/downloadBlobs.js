@@ -4,7 +4,7 @@ const path = require("path");
 
 // Define your connection string and container name
 const AZURE_STORAGE_CONNECTION_STRING =
-  "BlobEndpoint=https://pinnaclemep-microsoftrouting.blob.core.windows.net/;QueueEndpoint=https://pinnaclemep-microsoftrouting.queue.core.windows.net/;FileEndpoint=https://pinnaclemep-microsoftrouting.file.core.windows.net/;TableEndpoint=https://pinnaclemep-microsoftrouting.table.core.windows.net/;SharedAccessSignature=sv=2022-11-02&ss=bf&srt=co&sp=rwdlaciytfx&se=2024-07-10T14:27:27Z&st=2024-07-10T06:27:27Z&spr=https,http&sig=AvAfCa1CrQJ4o25lCxKI1TYoqOclzAzzTicnicZexfY%3D";
+  "BlobEndpoint=https://pinnaclemep-microsoftrouting.blob.core.windows.net/;QueueEndpoint=https://pinnaclemep-microsoftrouting.queue.core.windows.net/;FileEndpoint=https://pinnaclemep-microsoftrouting.file.core.windows.net/;TableEndpoint=https://pinnaclemep-microsoftrouting.table.core.windows.net/;SharedAccessSignature=sv=2022-11-02&ss=bf&srt=co&sp=rwlactfx&se=2024-08-09T19:42:10Z&st=2024-07-10T11:42:10Z&spr=https,http&sig=9RsClCqeQNyOwtxKrElRpssuqb3mZgwmf3W6dB1XWPE%3D";
 const containerName = "pinnacle-mep-sandbox";
 
 async function listAndDownloadBlobs() {
@@ -27,6 +27,9 @@ async function listAndDownloadBlobs() {
     console.log(`Created directory: ${targetDir}`);
   }
 
+  // Collect download promises
+  const downloadPromises = [];
+
   // List the blobs in the container
   for await (const blob of containerClient.listBlobsFlat()) {
     if (blob.name.endsWith(".csv")) {
@@ -35,17 +38,24 @@ async function listAndDownloadBlobs() {
       const downloadBlockBlobResponse = await blobClient.download(0);
       const filePath = path.join(targetDir, blob.name);
 
-      // Save the file to the local file system
-      const writableStream = fs.createWriteStream(filePath);
-      downloadBlockBlobResponse.readableStreamBody.pipe(writableStream);
+      const downloadPromise = new Promise((resolve, reject) => {
+        const writableStream = fs.createWriteStream(filePath);
+        downloadBlockBlobResponse.readableStreamBody.pipe(writableStream);
 
-      writableStream.on("finish", () => {
-        console.log(`Downloaded ${blob.name} to ${filePath}`);
+        writableStream.on("finish", () => {
+          console.log(`Downloaded ${blob.name} to ${filePath}`);
+          resolve();
+        });
+
+        writableStream.on("error", reject);
       });
+
+      downloadPromises.push(downloadPromise);
     }
   }
+
+  // Wait for all downloads to complete
+  await Promise.all(downloadPromises);
 }
 
-listAndDownloadBlobs().catch((error) => {
-  console.error("Error running sample:", error.message);
-});
+module.exports = listAndDownloadBlobs;

@@ -9,7 +9,7 @@ async function hvac_merge_insertion(
   header_data,
   table_name
 ) {
-  let status = "failure";
+  let status = false;
   // Generate a temporary table name
   const tempTableName = `Temp_${table_name}_${Date.now()}`;
 
@@ -108,10 +108,10 @@ async function hvac_merge_insertion(
       mergeResult.rowsAffected
     );
 
-    status = "success";
+    status = true;
   } catch (err) {
     console.error(`${table_name} Bulk insert error:`, err);
-    status = "failure";
+    status = false;
 
     try {
       await sql_pool.query(`DROP TABLE ${tempTableName}`);
