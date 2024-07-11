@@ -7,18 +7,21 @@ const clearDirectory = require("./modules/clearDirectory");
 const create_sql_connection = require("./modules/create_sql_connection");
 const sage_data_insertion = require("./modules/sage_data_insertion");
 
+let currentBatchDate = new Date();
+currentBatchDate.setHours(7, 0, 0, 0);
+
+console.log("currentBatchDate: ", currentBatchDate);
+
 async function transporter() {
   const blobFilesFolderPath = path.join(__dirname, "blob_files");
   let error_status = "downloading blobs";
 
   try {
-    let dataLake = {};
-
     // clear existing files
     await clearDirectory(blobFilesFolderPath);
 
     // download csv files from pinnacle-mep-sandbox container
-    await listAndDownloadBlobs();
+    await listAndDownloadBlobs(currentBatchDate.toISOString().slice(0, 10));
 
     error_status = "reading blob_files directory";
 
@@ -66,4 +69,44 @@ async function transporter() {
   }
 }
 
-transporter();
+// transporter();
+
+async function orchestrate() {
+  let should_auto_update = true;
+
+  // Step 1: Call start_pipeline
+  await transporter();
+
+  do {
+    const next_batch_time = new Date(currentBatchDate);
+
+    // adjust the next_batch_time setting as required
+    next_batch_time.setDate(next_batch_time.getDate() + 1);
+    next_batch_time.setUTCHours(7, 0, 0, 0);
+
+    console.log("Finished batch: ", currentBatchDate);
+    console.log("Next batch: ", next_batch_time);
+
+    const now = new Date();
+
+    if (now < next_batch_time) {
+      // Schedule the next call after the time until the next batch
+      const timeUntilNextBatch = next_batch_time - now; // Calculate milliseconds until the next batch
+      console.log("Timer function entering", timeUntilNextBatch);
+
+      await new Promise((resolve) => setTimeout(resolve, timeUntilNextBatch));
+    } else {
+      console.log("Next batch initiated");
+
+      now.setHours(7, 0, 0, 0);
+      //   currentBatchDate = now;
+
+      // Step 1: Call start_pipeline
+      await transporter();
+    }
+
+    should_auto_update = true;
+  } while (should_auto_update);
+}
+
+orchestrate();

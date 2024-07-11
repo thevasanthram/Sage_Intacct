@@ -7,7 +7,7 @@ const AZURE_STORAGE_CONNECTION_STRING =
   "BlobEndpoint=https://pinnaclemep-microsoftrouting.blob.core.windows.net/;QueueEndpoint=https://pinnaclemep-microsoftrouting.queue.core.windows.net/;FileEndpoint=https://pinnaclemep-microsoftrouting.file.core.windows.net/;TableEndpoint=https://pinnaclemep-microsoftrouting.table.core.windows.net/;SharedAccessSignature=sv=2022-11-02&ss=bf&srt=co&sp=rwlactfx&se=2024-08-09T19:42:10Z&st=2024-07-10T11:42:10Z&spr=https,http&sig=9RsClCqeQNyOwtxKrElRpssuqb3mZgwmf3W6dB1XWPE%3D";
 const containerName = "pinnacle-mep-sandbox";
 
-async function listAndDownloadBlobs() {
+async function listAndDownloadBlobs(currentBatchDate) {
   // Create the BlobServiceClient object which will be used to create a container client
   const blobServiceClient = BlobServiceClient.fromConnectionString(
     AZURE_STORAGE_CONNECTION_STRING
@@ -32,7 +32,7 @@ async function listAndDownloadBlobs() {
 
   // List the blobs in the container
   for await (const blob of containerClient.listBlobsFlat()) {
-    if (blob.name.endsWith(".csv")) {
+    if (blob.name.includes(currentBatchDate) && blob.name.endsWith(".csv")) {
       console.log(`Downloading blob ${blob.name}...`);
       const blobClient = containerClient.getBlobClient(blob.name);
       const downloadBlockBlobResponse = await blobClient.download(0);
