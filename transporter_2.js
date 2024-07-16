@@ -20,7 +20,7 @@ async function transporter() {
     // clear existing files
     await clearDirectory(blobFilesFolderPath);
 
-    // download csv files from pinnacle-mep-sandbox container
+    // download csv files from pinnacle-mep-sandbox container (only today)
     await listAndDownloadBlobs(currentBatchDate.toISOString().slice(0, 10));
 
     error_status = "reading blob_files directory";
@@ -98,8 +98,8 @@ async function orchestrate() {
     } else {
       console.log("Next batch initiated");
 
-      now.setHours(7, 0, 0, 0);
-      //   currentBatchDate = now;
+      // now.setHours(7, 0, 0, 0);
+      currentBatchDate = next_batch_time;
 
       // Step 1: Call start_pipeline
       await transporter();
