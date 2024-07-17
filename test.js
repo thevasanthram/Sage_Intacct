@@ -38,8 +38,8 @@ async function test() {
     Object.keys(GLBATCH_batch_no).length
   );
 
-  const record_no_count = 0;
-  const batch_no_count = 0;
+  let record_no_count = 0;
+  let batch_no_count = 0;
   Object.keys(GLENTRY_batches).map((batch_no) => {
     if (GLBATCH_record_no[batch_no]) {
       record_no_count = record_no_count + 1;
