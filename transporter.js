@@ -35,32 +35,32 @@ async function transporter() {
       sql_request = await create_sql_connection();
     } while (!sql_request);
 
-    for (let i = 0; i < csv_files.length; i++) {
-      console.log(`processing file: ${csv_files[i]}...`);
-      try {
-        const csvFileName = csv_files[i];
-        const completePath = path.join(blobFilesFolderPath, csvFileName);
-        const data = await readCSV(completePath);
+    // for (let i = 0; i < csv_files.length; i++) {
+    //   console.log(`processing file: ${csv_files[i]}...`);
+    //   try {
+    //     const csvFileName = csv_files[i];
+    //     const completePath = path.join(blobFilesFolderPath, csvFileName);
+    //     const data = await readCSV(completePath);
 
-        const tableName = csvFileName.split(".")[0];
+    //     const tableName = csvFileName.split(".")[0];
 
-        console.log(`${csvFileName}: `, data.length);
+    //     console.log(`${csvFileName}: `, data.length);
 
-        const headerData = data[0];
+    //     const headerData = data[0];
 
-        let data_insertion_status = false;
-        do {
-          data_insertion_status = await sage_data_insertion(
-            sql_request,
-            data,
-            headerData,
-            tableName
-          );
-        } while (!data_insertion_status);
-      } catch (err) {
-        console.log(`Error while reading data from ${csvFileName}`, err);
-      }
-    }
+    //     let data_insertion_status = false;
+    //     do {
+    //       data_insertion_status = await sage_data_insertion(
+    //         sql_request,
+    //         data,
+    //         headerData,
+    //         tableName
+    //       );
+    //     } while (!data_insertion_status);
+    //   } catch (err) {
+    //     console.log(`Error while reading data from ${csvFileName}`, err);
+    //   }
+    // }
   } catch (error) {
     console.log(`Error while ${error_status}: `, error);
   }
