@@ -15,13 +15,14 @@ async function query() {
     // let data_delivery_service =
     //   new IA.Functions.DataDeliveryService.DdsObjectList();
 
-    data_delivery_service.objectName = "CUSTOMER";
+    data_delivery_service.objectName = "WAREHOUSE";
 
     // console.log("data_delivery_service: ", data_delivery_service);
 
     const response = await client.execute(data_delivery_service);
 
-    console.log("response: ", response);
+    // console.log("response: ", response);
+    console.log("response: ", response._results[0]._data[0]);
 
     // data_delivery_service:  {
     //     DdsJobCreate: [Getter],

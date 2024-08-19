@@ -717,4 +717,45 @@ async function start() {
   // console.log("error_counting : ", error_counting);
 }
 
-start();
+async function orchestrate() {
+  // Step 1: Call start_pipeline //
+  await start();
+
+  console.log("filtering_condition: ", filtering_condition);
+
+  do {
+    const next_batch_time = new Date(filtering_condition["lessThan"]);
+
+    next_batch_time.setDate(next_batch_time.getDate() + 7);
+    next_batch_time.setUTCHours(6, 0, 0, 0);
+
+    console.log("finished batch: ", filtering_condition["lessThan"]);
+    console.log("next batch: ", next_batch_time);
+
+    const now = new Date();
+
+    // Check if it's the next day
+    // now < next_batch_time
+    if (now < next_batch_time) {
+      // Schedule the next call after an day
+      const timeUntilNextBatch = next_batch_time - now; // Calculate milliseconds until the next day
+      console.log("timer funtion entering", timeUntilNextBatch);
+
+      await new Promise((resolve) => setTimeout(resolve, timeUntilNextBatch));
+    } else {
+      console.log("next batch initiated");
+
+      now.setUTCHours(6, 0, 0, 0);
+      filtering_condition["lessThan"] = now.toISOString();
+
+      console.log("filtering_condition: ", filtering_condition);
+
+      // Step 1: Call start_pipeline
+      await start();
+    }
+
+    should_auto_update = true;
+  } while (should_auto_update);
+}
+
+orchestrate();
