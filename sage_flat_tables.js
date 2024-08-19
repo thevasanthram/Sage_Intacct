@@ -644,8 +644,9 @@ const filtering_condition = {
 async function flush_database(sql_request) {
   const schemaPath = path.join(__dirname, "/modules/drop_all_table.sql"); // Use an absolute path
   const drop_all_table_query = fs.readFileSync(schemaPath, "utf-8");
+  const drop_gle_table = "DROP TABLE General_Ledger_General_Ledger_Details";
 
-  await sql_request.query(drop_all_table_query);
+  await sql_request.query(drop_gle_table);
 }
 
 async function start() {
@@ -655,7 +656,7 @@ async function start() {
     sql_request = await create_sql_connection();
   } while (!sql_request);
 
-  // await flush_database(sql_request);
+  await flush_database(sql_request);
 
   const data_hub = {};
 
