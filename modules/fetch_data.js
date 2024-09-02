@@ -267,8 +267,8 @@ async function query(
           "network timeout at: https://api.intacct.com/ia/xml/xmlgw.phtml"
         )
       ) {
-        console.log("entering===");
-        fetching_data_status = true;
+        console.log("Fetching failed.. trying again!");
+        fetching_data_status = false;
       } else {
         fetching_data_status = false;
         console.log(

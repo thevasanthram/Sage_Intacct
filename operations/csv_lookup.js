@@ -8,8 +8,11 @@ async function look_up() {
   try {
     const client = bootstrap.client();
 
-    let query = new IA.Functions.Common.ReadByQuery();
-    query.objectName = "ARINVOICE";
+    // console.log("IA.Functions: ", IA.Functions.Common.Read());
+
+    // ReadByQuery
+    let query = new IA.Functions.Common.Read();
+    query.objectName = "getTrialBalance";
     query.returnFormat = "csv";
     query.pageSize = 1000;
 
