@@ -633,7 +633,7 @@ const api_collection = {
 
 let today = new Date();
 
-today.setUTCHours(6, 0, 0, 0); // IST 12.30 PM
+today.setUTCHours(11, 0, 0, 0); // IST 12.30 PM
 
 const filtering_condition = {
   column: "WHENCREATED",
@@ -729,7 +729,7 @@ async function orchestrate() {
     const next_batch_time = new Date(filtering_condition["lessThan"]);
 
     next_batch_time.setDate(next_batch_time.getDate() + 7);
-    next_batch_time.setUTCHours(6, 0, 0, 0);
+    next_batch_time.setUTCHours(11, 0, 0, 0);
 
     console.log("finished batch: ", filtering_condition["lessThan"]);
     console.log("next batch: ", next_batch_time);
@@ -747,7 +747,7 @@ async function orchestrate() {
     } else {
       console.log("next batch initiated");
 
-      now.setUTCHours(6, 0, 0, 0);
+      now.setUTCHours(11, 0, 0, 0);
       filtering_condition["lessThan"] = now.toISOString();
 
       console.log("filtering_condition: ", filtering_condition);

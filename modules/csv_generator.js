@@ -8,15 +8,21 @@ async function csv_generator(
   data_pool,
   flattenedSampleObj,
   csv_file_name,
-  initial_batch
+  initial_batch,
+  mode
 ) {
   // Process and write data in batches
   const batchSize = 100; // Set the batch size as needed
   let index = 0;
 
-  const csv_folder_path = `./flat_tables/${api_category}/`;
+  let csv_folder_path = "";
 
-  csv_file_name = api_name.replace(/-/g, "_").replace("/", "_");
+  if (mode) {
+    csv_folder_path = mode;
+  } else {
+    csv_folder_path = `./flat_tables/${api_category}/`;
+    csv_file_name = api_name.replace(/-/g, "_").replace("/", "_");
+  }
 
   // console.log("csv_generator function");
 

@@ -4,9 +4,7 @@ const create_flat_table = require("./create_flat_table");
 const flat_data_insertion = require("./flat_data_insertion");
 const hvac_merge_insertion = require("./hvac_merge_insertion");
 const find_lenghthiest_header = require("./find_lengthiest_header");
-const {
-  ConsolidationCreate,
-} = require("@intacct/intacct-sdk/dist/Functions/GlobalConsolidations");
+const csv_generator = require("./../modules/csv_generator");
 
 async function query(
   sql_request,
@@ -157,6 +155,47 @@ async function query(
 
           is_first_time = false;
         } else {
+          // save the old data in a file
+          if (insertion_mode == "UPDATING") {
+            console.log("total modified records: ", data_pool.length);
+
+            const fetch_old_details_query = `SELECT * FROM ${table_name} WHERE RECORDNO IN (${data_pool
+              .map((record) => {
+                return `'${record["RECORDNO"]}'`;
+              })
+              .join(",")})`;
+
+            const now = new Date();
+
+            const fetched_details = await sql_request.query(
+              fetch_old_details_query
+            );
+
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, "0"); // Adding 1 since months are 0-indexed
+            const day = String(today.getDate()).padStart(2, "0");
+
+            const formattedDate = `${year}_${month}_${day}`;
+
+            // generating csv files for this data
+            await csv_generator(
+              "",
+              "",
+              fetched_details.recordset,
+              fetched_details.recordset[0],
+              table_name + `_${formattedDate}`,
+              true,
+              "old_changes"
+            );
+
+            const new_now = new Date();
+
+            console.log("total time", now - new_now / 1000);
+
+            console.log("fetched_details: ", fetched_details.recordset.length);
+          }
+
           do {
             data_insertion_status = await hvac_merge_insertion(
               sql_request,
@@ -199,6 +238,47 @@ async function query(
 
         is_first_time = false;
       } else {
+        // save the old data in a file
+        if (insertion_mode == "UPDATING") {
+          console.log("total modified records: ", data_pool.length);
+
+          const fetch_old_details_query = `SELECT * FROM ${table_name} WHERE RECORDNO IN (${data_pool
+            .map((record) => {
+              return `'${record["RECORDNO"]}'`;
+            })
+            .join(",")})`;
+
+          const now = new Date();
+
+          const fetched_details = await sql_request.query(
+            fetch_old_details_query
+          );
+
+          const today = new Date();
+          const year = today.getFullYear();
+          const month = String(today.getMonth() + 1).padStart(2, "0"); // Adding 1 since months are 0-indexed
+          const day = String(today.getDate()).padStart(2, "0");
+
+          const formattedDate = `${year}_${month}_${day}`;
+
+          // generating csv files for this data
+          await csv_generator(
+            "",
+            "",
+            fetched_details.recordset,
+            fetched_details.recordset[0],
+            table_name + `_${formattedDate}`,
+            true,
+            "old_changes"
+          );
+
+          const new_now = new Date();
+
+          console.log("total time", now - new_now / 1000);
+
+          console.log("fetched_details: ", fetched_details.recordset.length);
+        }
+
         do {
           data_insertion_status = await hvac_merge_insertion(
             sql_request,

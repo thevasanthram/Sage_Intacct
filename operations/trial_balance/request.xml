@@ -1,0 +1,30 @@
+<request>
+  <control>
+    <senderid>pinnacle-mep</senderid>
+    <password>Y52!po29@LngT</password>
+    <controlid>unique_control_id</controlid>
+    <uniqueid>false</uniqueid>
+    <dtdversion>3.0</dtdversion>
+    <includewhitespace>false</includewhitespace>
+  </control>
+  <operation>
+    <authentication>
+      <login>
+        <userid>pinnacle-mep</userid>
+        <companyid>vjoshi</companyid>
+        <password>TestRed@01</password>
+      </login>
+    </authentication>
+    <content>
+      <function controlid="get_trial_balance">
+       <get_report>
+          <report>TrialBalance</report>
+          <reportingperiod>
+            <startdate>2024-09-01</startdate> <!-- Example start date -->
+            <enddate>2024-09-30</enddate> <!-- Example end date -->
+          </reportingperiod>
+        </get_report>
+      </function>
+    </content>
+  </operation>
+</request>
