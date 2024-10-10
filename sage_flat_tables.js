@@ -633,7 +633,7 @@ const api_collection = {
 
 let today = new Date();
 
-today.setUTCHours(11, 0, 0, 0); // IST 12.30 PM
+today.setUTCHours(11, 0, 0, 0); // IST 4.30 PM
 
 const filtering_condition = {
   column: "WHENCREATED",

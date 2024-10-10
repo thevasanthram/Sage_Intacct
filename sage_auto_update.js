@@ -323,7 +323,7 @@ yesterday.setDate(yesterday.getDate() - 1); // Yesterday at 00:00 IST
 
 const filtering_condition = {
   greaterThanOrEqualTo: yesterday.toISOString(),
-  // greaterThanOrEqualTo: "2024-09-07T00:00:00.00Z",
+  // greaterThanOrEqualTo: "2024-10-04T00:00:00.00Z",
   lessThan: today.toISOString(), // "2024-02-12T00:00:00.00Z"
 };
 
