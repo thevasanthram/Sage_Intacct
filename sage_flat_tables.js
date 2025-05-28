@@ -631,14 +631,10 @@ const api_collection = {
 //   },
 // };
 
-let today = new Date();
-
-today.setUTCHours(11, 0, 0, 0); // IST 4.30 PM
-
 const filtering_condition = {
   column: "WHENCREATED",
   // greaterThanOrEqualTo: "2024-04-20T00:00:00.00Z", // "2024-02-12T00:00:00.00Z"
-  lessThan: today.toISOString(), // "2024-02-12T00:00:00.00Z"
+  lessThan: "", // "2024-02-12T00:00:00.00Z"
 };
 
 async function flush_database(sql_request) {
@@ -720,40 +716,60 @@ async function start() {
 }
 
 async function orchestrate() {
+  // Get Today US Date
+  let current_date = new Date();
+  const usTimeString = current_date.toLocaleString("en-US", {
+    timeZone: "America/Los_Angeles",
+  });
+  current_date = new Date(usTimeString);
+  console.log("Current US Time: ", current_date);
+  current_date.setDate(current_date.getDate() + 1);
+  current_date.setUTCHours(22, 0, 0, 0);
+
+  filtering_condition["lessThan"] = current_date.toISOString();
+
   // Step 1: Call start_pipeline //
-  await start();
+  // await start();
 
   console.log("filtering_condition: ", filtering_condition);
 
   do {
-    const next_batch_time = new Date(filtering_condition["lessThan"]);
+    const currentDate = new Date(filtering_condition["lessThan"]);
 
-    next_batch_time.setDate(next_batch_time.getDate() + 7);
-    next_batch_time.setUTCHours(11, 0, 0, 0);
+    // Get the current day (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
+    const currentDay = currentDate.getUTCDay();
+
+    // Calculate how many days to add to reach next Sunday
+    // If today is Sunday (0), next Sunday is 7 days away
+    const daysToAdd = (7 - currentDay) % 7 || 7;
+
+    const nextSunday = new Date(currentDate);
+    nextSunday.setUTCDate(currentDate.getUTCDate() + daysToAdd);
+    nextSunday.setUTCHours(22, 0, 0, 0);
 
     console.log("finished batch: ", filtering_condition["lessThan"]);
-    console.log("next batch: ", next_batch_time);
+    console.log("next batch: ", nextSunday);
 
     const now = new Date();
 
     // Check if it's the next day
-    // now < next_batch_time
-    if (now < next_batch_time) {
+    // now < nextSunday
+    if (now < nextSunday) {
       // Schedule the next call after an day
-      const timeUntilNextBatch = next_batch_time - now; // Calculate milliseconds until the next day
+      const timeUntilNextBatch = nextSunday - now; // Calculate milliseconds until the next day
       console.log("timer funtion entering", timeUntilNextBatch);
 
       await new Promise((resolve) => setTimeout(resolve, timeUntilNextBatch));
     } else {
       console.log("next batch initiated");
 
-      now.setUTCHours(11, 0, 0, 0);
+      now.setUTCHours(22, 0, 0, 0);
       filtering_condition["lessThan"] = now.toISOString();
 
       console.log("filtering_condition: ", filtering_condition);
 
       // Step 1: Call start_pipeline
-      await start();
+      // await start();
     }
 
     should_auto_update = true;
