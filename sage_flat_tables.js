@@ -729,7 +729,7 @@ async function orchestrate() {
   filtering_condition["lessThan"] = current_date.toISOString();
 
   // Step 1: Call start_pipeline //
-  // await start();
+  await start();
 
   console.log("filtering_condition: ", filtering_condition);
 
@@ -769,7 +769,7 @@ async function orchestrate() {
       console.log("filtering_condition: ", filtering_condition);
 
       // Step 1: Call start_pipeline
-      // await start();
+      await start();
     }
 
     should_auto_update = true;
